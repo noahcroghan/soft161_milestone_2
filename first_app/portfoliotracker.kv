@@ -1,0 +1,272 @@
+ScreenManager:
+    Screen:
+        name: "home_screen"
+        BoxLayout:
+            orientation: 'vertical'
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: 'Portfolio Tracker'
+                    font_size: 60
+                    font_name: 'Roboto-Bold'
+            GridLayout:
+                cols: 1
+                rows: 3
+                padding: 20
+                spacing: 20
+                Button:
+                    text: 'New Cryptocurrency'
+                    on_press:
+                        root.transition.direction = 'left'
+                        root.current = 'new_crypto_screen'
+                Button:
+                    text: 'New Portfolio Entry'
+                    on_press:
+                        root.transition.direction = 'left'
+                        root.current = 'new_portfolio_screen'
+                Button:
+                    text: 'Check Portfolio Value'
+                    on_press:
+                        root.transition.direction = 'left'
+                        root.current = 'check_portfolio_screen'
+            BoxLayout:
+    Screen:
+        name: "new_crypto_screen"
+        GridLayout:
+            cols: 1
+            rows: 9
+            padding: 20
+            spacing: 10
+            Label:
+                text: 'New Cryptocurrency'
+                font_size: 50
+                font_name: 'Roboto-Bold'
+            Label:
+                text: "Crypto Name"
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            TextInput:
+                id: new_crypto_in_1
+                text: f'{app.input_text}'
+                size_hint_y: None
+                height: 50
+                font_size: 30
+            Label:
+                text: "Crypto Symbol"
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            TextInput:
+                id: new_crypto_in_2
+                text: f'{app.input_text}'
+                size_hint_y: None
+                height: 50
+                font_size: 30
+            Label:
+                text: "Crypto Price"
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            TextInput:
+                id: new_crypto_in_3
+                text: f'{app.input_text}'
+                size_hint_y: None
+                height: 50
+                font_size: 30
+            Label:
+                id: new_crypto_message
+                text: ""
+                color: ((50/256), (222/256), (153/256), 1.0)
+                font_size: 50
+            GridLayout:
+                cols: 2
+                rows: 1
+                spacing: 10
+                size_hint_y: None
+                height: 140
+                Button:
+                    text: "HOME"
+                    size_hint_x: None
+                    width: 140
+                    font_size: 40
+                    font_name: 'Roboto-Bold'
+                    on_press:
+                        root.transition.direction = 'right'
+                        root.current = 'home_screen'
+                        app.go_to_home(new_crypto_message)
+                Button:
+                    text: "SUBMIT"
+                    font_size: 80
+                    font_name: 'Roboto-Bold'
+                    on_press:
+                        app.submit_data(new_crypto_message, new_crypto_in_1, new_crypto_in_2, new_crypto_in_3, "New Crypto Added", "Error: Invalid Data")
+    Screen:
+        name: "new_portfolio_screen"
+        GridLayout:
+            cols: 1
+            rows: 9
+            padding: 20
+            spacing: 10
+            Label:
+                text: 'New Portfolio Entry'
+                font_size: 50
+                font_name: 'Roboto-Bold'
+            Label:
+                text: "Crypto Name"
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            TextInput:
+                id: new_portfolio_in_1
+                text: f'{app.input_text}'
+                size_hint_y: None
+                height: 50
+                font_size: 30
+            Label:
+                text: "Quantity Purchased"
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            TextInput:
+                id: new_portfolio_in_2
+                text: f'{app.input_text}'
+                size_hint_y: None
+                height: 50
+                font_size: 30
+            Label:
+                text: "Date Purchased"
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            TextInput:
+                id: new_portfolio_in_3
+                text: f'{app.input_text}'
+                size_hint_y: None
+                height: 50
+                font_size: 30
+            Label:
+                id: new_portfolio_message
+                text: ""
+                color: ((50/256), (222/256), (153/256), 1.0)
+                font_size: 50
+            GridLayout:
+                cols: 2
+                rows: 1
+                spacing: 10
+                size_hint_y: None
+                height: 140
+                Button:
+                    text: "HOME"
+                    size_hint_x: None
+                    width: 140
+                    font_size: 40
+                    font_name: 'Roboto-Bold'
+                    on_press:
+                        root.transition.direction = 'right'
+                        root.current = 'home_screen'
+                        app.go_to_home(new_portfolio_message)
+                Button:
+                    text: "SUBMIT"
+                    font_size: 80
+                    font_name: 'Roboto-Bold'
+                    on_press:
+                        app.submit_data(new_portfolio_message, new_portfolio_in_1, new_portfolio_in_2, new_portfolio_in_3, "New Portfolio Added", "Error: Invalid Data")
+    Screen:
+        name: "check_portfolio_screen"
+        GridLayout:
+            cols: 1
+            rows: 13
+            padding: 20
+            spacing: 10
+            Label:
+                text: 'Check Portfolio Value'
+                font_size: 50
+                font_name: 'Roboto-Bold'
+            Label:
+                text: ""
+            Label:
+                text: "Portfolio ID"
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            TextInput:
+                id: check_value_in
+                text: f'{app.input_text}'
+                size_hint_y: None
+                height: 50
+                font_size: 30
+            Label:
+                text: ""
+            Label:
+                text: "Crypto Current Price:"
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            Label:
+                text: f'{app.crypto_price}'
+                color: ((50/256), (222/256), (153/256), 1.0)
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            Label:
+                text: "Current Portfolio Value:"
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            Label:
+                text: f'{app.portfolio_value}'
+                color: ((50/256), (222/256), (153/256), 1.0)
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            Label:
+                text: "Portfolio Value Change:"
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            Label:
+                text: f'{app.portfolio_value_change}'
+                color: ((50/256), (222/256), (153/256), 1.0)
+                font_size: 35
+                text_size: self.size
+                halign: 'left'
+            Label:
+                id: check_portfolio_message
+                text: ""
+                color: ((50/256), (222/256), (153/256), 1.0)
+                font_size: 45
+            GridLayout:
+                cols: 2
+                rows: 1
+                spacing: 10
+                size_hint_y: None
+                height: 140
+                Button:
+                    text: "HOME"
+                    size_hint_x: None
+                    width: 140
+                    font_size: 40
+                    font_name: 'Roboto-Bold'
+                    on_press:
+                        root.transition.direction = 'right'
+                        root.current = 'home_screen'
+                        app.go_to_home(check_portfolio_message)
+                Button:
+                    on_press: app.check_value(check_value_in, check_portfolio_message)
+                    text: "CHECK"
+                    font_size: 80
+                    font_name: 'Roboto-Bold'
+
+<Screen>:
+    canvas.before:
+        Color:
+            rgba: ((21/256), (44/256), (54/256), 1.0)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<Button>
+    background_normal: ''
+    background_color: ((13/256), (179/256), (93/256), 1.0)
+    font_size: 30
