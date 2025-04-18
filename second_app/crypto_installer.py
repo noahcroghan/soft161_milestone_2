@@ -1,194 +1,51 @@
-<MenuScreen>:
-    BoxLayout:
-        padding: dp(10)
-        spacing: dp(10)
-        orientation: 'vertical'
+from datetime import date
+from sys import stderr
 
-        Label:
-            text: 'Crypto App Main Menu'
-            bold: True
-        Button:
-            text: 'Select Coin'
-            on_press:
-                root.manager.current = 'SelectCoinScreen'
-                root.manager.transition.direction = 'left'
-        Button:
-            text: 'View History'
-            on_press:
-                root.manager.current = 'ViewHistoryScreen'
-                root.manager.transition.direction = 'left'
+from sqlalchemy.exc import SQLAlchemyError
 
-<SelectCoinScreen>:
-    BoxLayout:
-        orientation: 'vertical'
-        padding: dp(10)
-        spacing: dp(10)
+from config import port, password, username
+from cryptocurrencies import CryptoDatabase, Cryptocurrency, HistoricalPrice
 
 
-        Label:
-            text: 'Select Coin'
-            bold: True
-            halign: 'center'
-            valign: 'middle'
-            text_size: self.size
-            size_hint_y: None
-            height: dp(30)
+def add_starter_data(session):
+    session.add_all([Cryptocurrency(coingecko_id='bitcoin', name='Bitcoin', symbol='BTC', current_price=50000.00,
+                                    percent_change_24h=-2.5),
+                     Cryptocurrency(coingecko_id='ethereum', name='Ethereum', symbol='ETH', current_price=4000.00,
+                                    percent_change_24h=3.1),
+                     Cryptocurrency(coingecko_id='cardano', name='Cardano', symbol='ADA', current_price=1.25,
+                                    percent_change_24h=0.8),
+                     Cryptocurrency(coingecko_id='solana', name='Solana', symbol='SOL', current_price=150.00,
+                                    percent_change_24h=-1.2),
+                     Cryptocurrency(coingecko_id='dogecoin', name='Dogecoin', symbol='DOGE', current_price=0.30,
+                                    percent_change_24h=5.0),
 
-        TextInput:
-            size_hint_y: None
-            spacing: dp(10)
-            padding: [dp(10), 0]
-            id: search_input
-            hint_text: 'Search...'
-            multiline: False
-            on_text: root.search_coins()
-
-        Label:
-            id: select_coin_message
-            text: 'Loading Data...'
-            font_size: '14sp'
-            size_hint_y: None
-            halign: 'center'
-
-        BoxLayout:
-            size_hint_y: None
-            height: dp(40)
-            spacing: dp(10)
-            padding: [dp(10), 0]
-
-            Label:
-                text: '[u]Coin Name [i](Symbol)[/i][/u]'
-                markup: True
-            Label:
-                text: '[u]Current Price[/u]'
-                markup: True
-            Label:
-                text: '[u]24h percent change[/u]'
-                markup: True
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
-
-            BoxLayout:
-                id: coin_container
-                orientation: 'vertical'
-                size_hint_y: None
-                height: self.minimum_height
-        Button:
-            text: 'Back to Main Menu'
-            size_hint_y: None
-            height: dp(40)
-            on_press:
-                root.manager.current = 'MenuScreen'
-                root.manager.transition.direction = 'right'
-                # clear textbox
-                root.ids.search_input.text = ''
+                     HistoricalPrice(coingecko_id='bitcoin', date=date(2025, 4, 14), price=51000.00),
+                     HistoricalPrice(coingecko_id='bitcoin', date=date(2025, 4, 13), price=51500.00),
+                     HistoricalPrice(coingecko_id='ethereum', date=date(2025, 4, 14), price=3950.00),
+                     HistoricalPrice(coingecko_id='ethereum', date=date(2025, 4, 13), price=3900.00),
+                     HistoricalPrice(coingecko_id='cardano', date=date(2025, 4, 14), price=1.20),
+                     HistoricalPrice(coingecko_id='cardano', date=date(2025, 4, 13), price=1.22),
+                     HistoricalPrice(coingecko_id='solana', date=date(2025, 4, 14), price=152.00),
+                     HistoricalPrice(coingecko_id='solana', date=date(2025, 4, 13), price=155.00),
+                     HistoricalPrice(coingecko_id='dogecoin', date=date(2025, 4, 14), price=0.28),
+                     HistoricalPrice(coingecko_id='dogecoin', date=date(2025, 4, 13), price=0.27)])
 
 
-<ViewHistoryScreen>:
-    BoxLayout:
-        orientation: 'vertical'
-        padding: dp(10)
-        spacing: dp(10)
-
-        ScrollView:
-            do_scroll_y: True
-            do_scroll_x: False
-
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint_y: None
-                height: self.minimum_height
-                padding: dp(10)
-                spacing: dp(10)
-
-                Label:
-                    text: 'View History'
-                    bold: True
-                    size_hint_y: None
-                    height: dp(30)
-                    halign: 'center'
-                    valign: 'middle'
-                    text_size: self.size
-
-                TextInput:
-                    id: coin_symbol_input
-                    hint_text: 'Coin Symbol'
-                    multiline: False
-                    size_hint_y: None
-                    height: dp(40)
-
-                TextInput:
-                    id: start_date_input
-                    hint_text: 'Start Date'
-                    multiline: False
-                    size_hint_y: None
-                    height: dp(40)
-
-                TextInput:
-                    id: end_date_input
-                    hint_text: 'End Date'
-                    multiline: False
-                    size_hint_y: None
-                    height: dp(40)
-
-                Button:
-                    text: 'Submit'
-                    on_press: root.submit_history()
-                    size_hint_y: None
-                    height: dp(40)
+def main():
+    try:
+        url = CryptoDatabase.construct_mysql_url('localhost', port, 'crypto', username, password)
+        crypto_database = CryptoDatabase(url)
+        crypto_database.ensure_tables_exist()
+        print('Tables created.')
+        session = crypto_database.create_session()
+        add_starter_data(session)
+        session.commit()
+        print('Records created.')
+    except SQLAlchemyError as exception:
+        print('Database setup failed!', file=stderr)
+        print(f'Cause: {exception}', file=stderr)
+        exit(1)
 
 
-
-                Label:
-                    id: history_message
-                    text: ''
-                    font_size: '14sp'
-                    color: (1, 0, 0, 1)
-                    size_hint_y: None
-                    height: dp(20)
-                    halign: 'center'
-                    text_size: self.size
-
-                Image:
-                    id: line_chart
-                    source: ''
-                    size_hint_y: None
-                    height: dp(300)
-                    allow_stretch: True
-                    keep_ratio: True
-
-        Button:
-            text: 'Back to Select Coin'
-            on_press:
-                root.manager.current = 'SelectCoinScreen'
-                root.manager.transition.direction = 'right'
-            size_hint_y: None
-            height: dp(40)
-            disabled: not root.came_from_select_coin
-            opacity: 1 if root.came_from_select_coin else 0
-
-        Button:
-            text: 'Back to Main Menu'
-            on_press:
-                root.manager.current = 'MenuScreen'
-                root.manager.transition.direction = 'right'
-            size_hint_y: None
-            height: dp(40)
-
-
-
-
-<Screen>:
-    canvas.before:
-        Color:
-            rgba: (1, 1, 1, 1)
-        Rectangle:
-            pos: self.pos
-            size: self.size
-<Label>:
-    color: (0, 0, 0, 1)
-<Button>:
-    color: (1, 1, 1, 1)
-    background_color: (0, 0, 1, 1)
-    bold: True
+if __name__ == "__main__":
+    main()
