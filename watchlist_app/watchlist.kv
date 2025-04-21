@@ -1,0 +1,267 @@
+<MenuScreen>:
+    FloatLayout:
+        size: root.width, root.height
+        padding: 30
+        spacing: 15
+        canvas.before:
+            Color:
+                rgba: (.5, .8, 1, 1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Label:
+            text: "CryptoTracker"
+            outline_color: (1,1,1,1)
+            outline_width: 5
+            color: (0, 0, 0, 1)
+            size_hint: (.3, .5)
+            font_size: 125
+            text_size: root.width, root.height
+            pos_hint: {'top': 1.5, 'center_x': .75}
+        GridLayout:
+            padding: 20
+            cols: 5
+            pos_hint: {'top': .7}
+            size_hint_y: .1
+            Image:
+                source: '/Users/tristankingery/Downloads/menu_icon.png'
+            Button:
+                text: "Portfolio"
+            Button:
+                text: "Compare Coins"
+            Button:
+                text: "Trends"
+            Button:
+                text: "Watchlist"
+                on_press:
+                    root.manager.transition.direction = "left"
+                    root.manager.current = "Watchlist_Main"
+        GridLayout:
+            padding: 20
+            cols: 1
+            pos_hint: {'left': 1}
+            size_hint: (.4, .5)
+            canvas:
+                Color:
+                    rgba: 0,0,0,.5
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                Color:
+                    rgba: 1,1,1,.5
+                RoundedRectangle:
+                    pos: self.x+5, self.y+5
+                    size: self.width-10, self.height-10
+        GridLayout:
+            padding: 20
+            cols: 1
+            rows: 3
+            pos_hint: {'right': 1}
+            size_hint: (.6, .5)
+            spacing: 20
+            BoxLayout:
+                canvas:
+                    Color:
+                        rgba: 0,0,0,.5
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                    Color:
+                        rgba: 1,1,1,.5
+                    RoundedRectangle:
+                        pos: self.x+5, self.y+5
+                        size: self.width-10, self.height-10
+            BoxLayout:
+                canvas:
+                    Color:
+                        rgba: 0,0,0,.5
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                    Color:
+                        rgba: 1,1,1,.5
+                    RoundedRectangle:
+                        pos: self.x+5, self.y+5
+                        size: self.width-10, self.height-10
+            BoxLayout:
+                canvas:
+                    Color:
+                        rgba: 0,0,0,.5
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                    Color:
+                        rgba: 1,1,1,.5
+                    RoundedRectangle:
+                        pos: self.x+5, self.y+5
+                        size: self.width-10, self.height-10
+<WatchlistMain>:
+    GridLayout:
+        size: root.width, root.height
+        padding: 30
+        spacing: 30
+        canvas.before:
+            Color:
+                rgba: (.5, .8, 1, 1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        cols: 1
+        rows: 3
+        AnchorLayout:
+            anchor_x: 'left'
+            Button:
+                background_normal: '/Users/tristankingery/Downloads/back_button.png'
+                width: 100
+                height: 100
+                size_hint_x: None
+                size_hint_y: None
+                on_press:
+                    root.manager.transition.direction = "right"
+                    root.manager.current = "Menu"
+            Label:
+                text: "My Watchlist"
+                font_size: 125
+                color: (0,0,0,1)
+                outline_color: (1,1,1,1)
+                outline_width: 5
+        Button:
+            text: "New Watchlist Entry"
+            on_press:
+                root.manager.transition.direction = "left"
+                root.manager.current = "New_Watchlist"
+        Button:
+            text: "View Watchlist"
+            on_press:
+                root.manager.transition.direction = "left"
+                root.manager.current = "View_Watchlist"
+<NewWatchlist>:
+    BoxLayout:
+        size: root.width, root.height
+        padding: 30
+        spacing: 15
+        canvas.before:
+            Color:
+                rgba: (.5, .8, 1, 1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    GridLayout:
+        size: root.width, root.height
+        padding: 30
+        spacing: 15
+        canvas.before:
+            Color:
+                rgba: (.5, .8, 1, 1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        cols: 1
+        rows: 2
+        size_hint: (1, .6)
+        TextInput:
+            height: 50
+            size_hint_y: None
+            multiline: False
+            text: "Enter Crypto Symbol"
+            write_tab: False
+        Button:
+            text: "Back"
+            size_hint_x: .5
+            height: 100
+            size_hint_y: None
+            pos_hint: {'center_x': .5}
+            on_press:
+                root.manager.transition.direction = "right"
+                root.manager.current = "Watchlist_Main"
+<ViewWatchlist>:
+    FloatLayout:
+        size: root.width, root.height
+        padding: 30
+        spacing: 15
+        canvas.before:
+            Color:
+                rgba: (.5, .8, 1, 1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        AnchorLayout:
+            size: root.width, root.height
+            anchor_y: 'top'
+            anchor_x: 'left'
+            Button:
+                anchor_x: 'left'
+                anchor_y: 'top'
+                background_normal: '/Users/tristankingery/Downloads/back_button.png'
+                width: 100
+                height: 100
+                size_hint_x: None
+                size_hint_y: None
+                on_press:
+                    root.manager.transition.direction = "right"
+                    root.manager.current = "Watchlist_Main"
+        AnchorLayout:
+            anchor_x: 'center'
+            anchor_y: 'center'
+            GridLayout:
+                size: root.width, root.height
+                size_hint: (.8,.8)
+                padding: 50
+                spacing: 25
+                cols: 1
+                rows: 4
+                canvas.before:
+                    Color:
+                        rgba: (1,1,1,.3)
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                BoxLayout:
+                    canvas:
+                        Color:
+                            rgba: 0,0,0,.5
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                        Color:
+                            rgba: 1,1,1,.5
+                        RoundedRectangle:
+                            pos: self.x+5, self.y+5
+                            size: self.width-10, self.height-1
+                BoxLayout:
+                    canvas:
+                        Color:
+                            rgba: 0,0,0,.5
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                        Color:
+                            rgba: 1,1,1,.5
+                        RoundedRectangle:
+                            pos: self.x+5, self.y+5
+                            size: self.width-10, self.height-10
+                BoxLayout:
+                    canvas:
+                        Color:
+                            rgba: 0,0,0,.5
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                        Color:
+                            rgba: 1,1,1,.5
+                        RoundedRectangle:
+                            pos: self.x+5, self.y+5
+                            size: self.width-10, self.height-10
+        AnchorLayout:
+            size: root.width, root.height
+            anchor_y: 'bottom'
+            anchor_x: 'center'
+            size_hint: (1, .1)
+            padding: 25
+            Button:
+                text: "Refresh Prices"
+
+
+
+
+
