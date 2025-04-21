@@ -9,3 +9,6 @@ venv/
 *.iml
 *.iws
 *.ipr
+
+# Environment variables with sensitive data
+config.env

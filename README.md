@@ -9,4 +9,12 @@ The status of the apps in terms of completeness and correctness (list any known 
 
 # Instructions
 
-Instructions for building and running the apps, including any required dependencies and commands to create the database
+[//]: # (Instructions for building and running the apps, including any required dependencies and commands to create the database)
+
+Make a file under `installer` called `config.env` with the following contents
+```dotenv
+USERNAME=root
+PORT=3306
+PASSWORD=
+```
+In here, set your password, and change your port and username if necessary.
