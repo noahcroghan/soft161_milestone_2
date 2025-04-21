@@ -48,7 +48,5 @@ class CryptoDatabase(object):
     def ensure_tables_exist(self):
         Persisted.metadata.create_all(self.engine)
 
-        def create_session(self):
-            return self.Session()
-
-
+    def create_session(self):
+        return self.Session()
