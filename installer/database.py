@@ -1,7 +1,8 @@
+import os
+
+from dotenv import load_dotenv
 from sqlalchemy import Column, String, Integer, create_engine, ForeignKey, Date, Numeric
 from sqlalchemy.orm import declarative_base, sessionmaker
-
-from config import password, port, username
 
 Persisted = declarative_base()
 
@@ -41,16 +42,33 @@ class HistoricalPrice(Persisted):
 
 class CryptoDatabase(object):
     @staticmethod
-    def construct_mysql_url(authority, database):
-        return f'mysql+mysqlconnector://{username}:{password}@{authority}:{port}/{database}'
+    def construct_mysql_url():
+        load_dotenv('config.env')
 
-    @staticmethod
-    def construct_in_memory_url():
-        return 'sqlite:///'
+        if not os.path.exists('config.env'):
+            raise FileNotFoundError(
+                "config.env file is missing. Please create it and define USERNAME and PORT inside, according to the README")
+
+        username = os.getenv('USERNAME')
+        port_string = os.getenv('PORT')
+        password = os.getenv('PASSWORD')
+
+        if not username:
+            raise ValueError("USERNAME must be set in config.env")
+
+        if not port_string:
+            raise ValueError("PORT must be set in config.env")
+
+        try:
+            port = int(port_string)
+        except ValueError:
+            raise ValueError("PORT must be a valid integer")
+
+        return f'mysql+mysqlconnector://{username}:{password}@localhost:{port}/crypto'
 
     @staticmethod
     def get_session():
-        url = CryptoDatabase.construct_mysql_url('localhost', 'crypto')
+        url = CryptoDatabase.construct_mysql_url()
         crypto_database = CryptoDatabase(url)
         return crypto_database.create_session()
 
