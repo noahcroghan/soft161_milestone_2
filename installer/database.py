@@ -17,9 +17,9 @@ class Portfolio(Persisted):
     portfolio_id = Column(Integer, autoincrement=True, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
     crypto_id = Column(Integer, ForeignKey('cryptocurrencies.crypto_id'), nullable=False)
-    coin_amount = Column(Numeric(38, 18), nullable=False)
+    coin_amount = Column(Numeric(20, 8), nullable=False)
     purchase_date = Column(Date, nullable=False)
-    initial_investment_amount = Column(Numeric(38, 18), nullable=False)
+    initial_investment_amount = Column(Numeric(20, 8), nullable=False)
 
 
 class Cryptocurrency(Persisted):
@@ -27,8 +27,8 @@ class Cryptocurrency(Persisted):
     crypto_id = Column(Integer, autoincrement=True, primary_key=True)
     name = Column(String(50), nullable=False)
     symbol = Column(String(15), nullable=False)
-    current_price = Column(Numeric(38, 18), nullable=False)
-    percent_change_24h = Column(Numeric(38, 18))
+    current_price = Column(Numeric(20, 8), nullable=False)
+    percent_change_24h = Column(Numeric(20, 8))
 
 
 class HistoricalPrice(Persisted):
@@ -36,7 +36,7 @@ class HistoricalPrice(Persisted):
     id = Column(Integer, primary_key=True)
     crypto_id = Column(Integer, ForeignKey('cryptocurrencies.crypto_id'), nullable=False)
     date = Column(Date, nullable=False)
-    price = Column(Numeric(38, 18), nullable=False)
+    price = Column(Numeric(20, 8), nullable=False)
 
 
 class CryptoDatabase(object):
