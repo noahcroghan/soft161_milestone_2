@@ -1,7 +1,11 @@
 # Cryptocurrency App
 
-- The names of the apps and the installer
-- A description of each app
+[//]: # (- The names of the apps and the installer)
+
+[//]: # (- A description of each app)
+
+- `main_app/main.py` Primary GUI Application
+- `installer/database_installer.py` Creates tables and records in database
 
 # Completeness
 
