@@ -1,5 +1,5 @@
 <LoginScreen>:
-    name: 'login'
+    name: 'LoginScreen'
     BoxLayout:
         orientation: 'vertical'
         padding: [50, 100]
@@ -39,6 +39,7 @@
             height: dp(40)
 
 <MainScreen>:
+    name: 'MainScreen'
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -49,7 +50,7 @@
                 font_name: 'Roboto-Bold'
         GridLayout:
             cols: 1
-            rows: 3
+            rows: 4
             padding: 20
             spacing: 20
             Button:
@@ -67,7 +68,62 @@
                 on_press:
                     root.transition.direction = 'left'
                     root.current = 'check_portfolio_screen'
+            Button:
+                text: 'About/Help'
+                on_press:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'HelpScreen'
         BoxLayout:
+
+<HelpScreen>:
+    name: 'HelpScreen'
+    ScrollView:
+        BoxLayout:
+            orientation: 'vertical'
+            padding: dp(20)
+            spacing: dp(10)
+            size_hint_y: None
+            height: self.minimum_height
+
+            Label:
+                text: 'Help & About'
+                font_size: 40
+                font_name: 'Roboto-Bold'
+                size_hint_y: None
+                height: dp(50)
+
+            Label:
+                text: 'Instructions for Using the App'
+                font_size: 30
+                size_hint_y: None
+                height: dp(40)
+
+            Label:
+                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            Label:
+                text: 'API Reference'
+                font_size: 30
+                size_hint_y: None
+                height: dp(40)
+
+            Label:
+                text: 'Visit CoinGecko API documentation: https://www.coingecko.com/en/api/documentation'
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            Button:
+                text: 'Back to Main Menu'
+                size_hint_y: None
+                height: dp(40)
+                on_press:
+                    root.manager.transition.direction = 'right'
+                    root.manager.current = 'MainScreen'
+
 
 <Screen>:
     canvas.before:

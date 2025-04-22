@@ -23,12 +23,9 @@ class MainApp(App):
         self.title = 'Cryptocurrency App'
 
         screen_manager = ScreenManager()
-        screen_manager.add_widget(LoginScreen(name='LoginScreen'))
-        screen_manager.add_widget(MainScreen(name='MainScreen'))
-        screen_manager.add_widget(HelpScreen(name='HelpScreen'))
-        # screen_manager.add_widget(MenuScreen(name='MenuScreen'))
-        # screen_manager.add_widget(SelectCoinScreen(name='SelectCoinScreen'))
-        # screen_manager.add_widget(ViewHistoryScreen(name='ViewHistoryScreen'))
+        # screen_manager.add_widget(LoginScreen())
+        screen_manager.add_widget(MainScreen())
+        screen_manager.add_widget(HelpScreen())
 
         inspector.create_inspector(Window, screen_manager) # For Inspection
 
