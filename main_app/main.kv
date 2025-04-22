@@ -1,4 +1,44 @@
-<MenuScreen>:
+<LoginScreen>:
+    name: 'login'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [50, 100]
+        spacing: 20
+
+        Label:
+            text: 'Login to Your Profile'
+            font_size: 40
+            font_name: 'Roboto-Bold'
+            size_hint_y: None
+            height: dp(60)
+
+        Spinner:
+            id: existing_users_spinner
+            text: 'Select Existing User'
+            values: []
+            size_hint_y: None
+            height: dp(40)
+
+        TextInput:
+            id: new_username_input
+            hint_text: 'Enter New Username'
+            multiline: False
+            size_hint_y: None
+            height: dp(40)
+
+        Button:
+            text: 'Create Profile'
+            on_press: app.create_profile(new_username_input.text)
+            size_hint_y: None
+            height: dp(40)
+
+        Button:
+            text: 'Login'
+            on_press: app.login_user(existing_users_spinner.text)
+            size_hint_y: None
+            height: dp(40)
+
+<MainScreen>:
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -12,23 +52,22 @@
             rows: 3
             padding: 20
             spacing: 20
-#            Button:
-#                text: 'New Cryptocurrency'
-#                on_press:
-#                    root.transition.direction = 'left'
-#                    root.current = 'new_crypto_screen'
-#            Button:
-#                text: 'New Portfolio Entry'
-#                on_press:
-#                    root.transition.direction = 'left'
-#                    root.current = 'new_portfolio_screen'
-#            Button:
-#                text: 'Check Portfolio Value'
-#                on_press:
-#                    root.transition.direction = 'left'
-#                    root.current = 'check_portfolio_screen'
+            Button:
+                text: 'New Cryptocurrency'
+                on_press:
+                    root.transition.direction = 'left'
+                    root.current = 'new_crypto_screen'
+            Button:
+                text: 'New Portfolio Entry'
+                on_press:
+                    root.transition.direction = 'left'
+                    root.current = 'new_portfolio_screen'
+            Button:
+                text: 'Check Portfolio Value'
+                on_press:
+                    root.transition.direction = 'left'
+                    root.current = 'check_portfolio_screen'
         BoxLayout:
-
 
 <Screen>:
     canvas.before:
