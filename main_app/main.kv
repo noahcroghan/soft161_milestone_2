@@ -1,0 +1,44 @@
+<MenuScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                text: 'Cryptocurrency App'
+                font_size: 60
+                font_name: 'Roboto-Bold'
+        GridLayout:
+            cols: 1
+            rows: 3
+            padding: 20
+            spacing: 20
+#            Button:
+#                text: 'New Cryptocurrency'
+#                on_press:
+#                    root.transition.direction = 'left'
+#                    root.current = 'new_crypto_screen'
+#            Button:
+#                text: 'New Portfolio Entry'
+#                on_press:
+#                    root.transition.direction = 'left'
+#                    root.current = 'new_portfolio_screen'
+#            Button:
+#                text: 'Check Portfolio Value'
+#                on_press:
+#                    root.transition.direction = 'left'
+#                    root.current = 'check_portfolio_screen'
+        BoxLayout:
+
+
+<Screen>:
+    canvas.before:
+        Color:
+            rgba: ((21/256), (44/256), (54/256), 1.0)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<Button>
+    background_normal: ''
+    background_color: ((13/256), (179/256), (93/256), 1.0)
+    font_size: 30
