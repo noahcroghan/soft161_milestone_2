@@ -24,7 +24,7 @@ class Portfolio(Persisted):
 
 class Cryptocurrency(Persisted):
     __tablename__ = 'cryptocurrencies'
-    crypto_id = Column(String(50), primary_key=True)
+    crypto_id = Column(Integer, autoincrement=True, primary_key=True)
     name = Column(String(50), nullable=False)
     symbol = Column(String(15), nullable=False)
     current_price = Column(Numeric(38, 18), nullable=False)
@@ -34,7 +34,7 @@ class Cryptocurrency(Persisted):
 class HistoricalPrice(Persisted):
     __tablename__ = 'historical_prices'
     id = Column(Integer, primary_key=True)
-    crypto_id = Column(String(50), ForeignKey('cryptocurrencies.crypto_id'), nullable=False)
+    crypto_id = Column(Integer, ForeignKey('cryptocurrencies.crypto_id'), nullable=False)
     date = Column(Date, nullable=False)
     price = Column(Numeric(38, 18), nullable=False)
 
