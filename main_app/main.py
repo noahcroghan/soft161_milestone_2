@@ -25,7 +25,7 @@ class LoginScreen(Screen):
 
 
     def create_username(self):
-        new_username = self.ids.new_username_input.text.strip()
+        new_username = self.ids.new_username_input.text
         if not new_username:
             return
 
@@ -38,10 +38,14 @@ class LoginScreen(Screen):
         added_username = db_session.create_user(new_username)
 
         if added_username:
-            self.ids.existing_users_spinner.values += [added_username]
+            if added_username not in self.ids.existing_users_spinner.values:
+                self.ids.existing_users_spinner.values.append(added_username)
             self.ids.new_username_input.text = ''
+            self.ids.feedback_label.text = f"User {added_username} created successfully"
         else:
             print("Failed to add username. The username was not created.")
+            self.ids.feedback_label.text = f"Username {added_username} already exists."
+
 
 
 

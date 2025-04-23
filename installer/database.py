@@ -13,7 +13,7 @@ Persisted = declarative_base()
 class User(Persisted):
     __tablename__ = 'users'
     user_id = Column(Integer, autoincrement=True, primary_key=True)
-    user_name = Column(String(30), nullable=False)
+    user_name = Column(String(30), nullable=False,unique=True)
 
 
 class Portfolio(Persisted):
@@ -94,6 +94,10 @@ class CryptoDatabase(object):
 
         session = self.create_session()
         try:
+            existing_user = session.query(User).filter(User.user_name == new_username).first()
+            if existing_user:
+                print(f"User with username '{new_username}' already exists.")
+                return None
             user = User(user_name=new_username)
             session.add(user)
             session.commit()
