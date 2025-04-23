@@ -1,4 +1,5 @@
 import os
+from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 from sqlalchemy import Column, String, Integer, create_engine, ForeignKey, Date, Numeric
@@ -64,8 +65,10 @@ class CryptoDatabase(object):
             port = int(port_string)
         except ValueError:
             raise ValueError("PORT must be a valid integer")
+        print(f"Connecting with username: {username}, port: {port}")
+        encoded_password =quote_plus(password)
 
-        return f'mysql+mysqlconnector://{username}:{password}@localhost:{port}/crypto'
+        return f'mysql+mysqlconnector://{username}:{encoded_password}@localhost:{port}/crypto'
 
     @staticmethod
     def get_session():
@@ -97,5 +100,17 @@ class CryptoDatabase(object):
             print(f"Error adding user: {e}")
             session.rollback()
             return None
+        finally:
+            session.close()
+
+    def get_all_users(self):
+        session = self.create_session()
+        try:
+            users = session.query(User).all()
+            print(f"Retrieved users from DB: {users}")
+            return [user.user_name for user in users]
+        except SQLAlchemyError as e:
+            print(f"Error fetching users: {e}")
+            return []
         finally:
             session.close()
