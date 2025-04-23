@@ -65,7 +65,7 @@ class MainApp(App):
 
 
         screen_manager = ScreenManager()
-        screen_manager.add_widget(LoginScreen())
+        # screen_manager.add_widget(LoginScreen())
         screen_manager.add_widget(MainScreen())
         screen_manager.add_widget(HelpScreen())
         screen_manager.add_widget(SelectCoinScreen())

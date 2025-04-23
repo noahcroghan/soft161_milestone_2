@@ -220,6 +220,7 @@
 
 <ViewHistoryScreen>:
     name: 'ViewHistoryScreen'
+
     BoxLayout:
         orientation: 'vertical'
         padding: dp(10)
@@ -272,8 +273,6 @@
                     size_hint_y: None
                     height: dp(40)
 
-
-
                 Label:
                     id: history_message
                     text: ''
@@ -291,6 +290,14 @@
                     height: dp(300)
                     allow_stretch: True
                     keep_ratio: True
+
+                Button:
+                    text: 'Export data to CSV file'
+                    on_press: root.export_to_csv()
+                    size_hint_y: None
+                    height: dp(40)
+                    disabled: not root.is_historical_data_generated
+                    opacity: 1 if root.is_historical_data_generated else 0
 
         Button:
             text: 'Back to Select Coin'
