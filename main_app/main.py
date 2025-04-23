@@ -5,9 +5,25 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 from historical_prices_app.main import SelectCoinScreen, ViewHistoryScreen
 from portfolio_tracker_app.main import NewCryptoScreen, NewPortfolioScreen, CheckPortfolioScreen
+from installer.database import CryptoDatabase  # Adjust path if needed
+
 
 class LoginScreen(Screen):
-    pass
+    def create_username(self):
+        new_username = self.ids.new_username_input.text.strip()
+        if not new_username:
+            return
+
+
+        db = CryptoDatabase('mysql+mysqlconnector://username:password@localhost:3306/crypto')
+
+
+        added_username = db.create_user(new_username)
+
+
+        if added_username:
+            self.ids.existing_users_spinner.values += [added_username]
+            self.ids.new_username_input.text = ''
 
 
 class HelpScreen(Screen):
@@ -27,7 +43,7 @@ class MainApp(App):
         self.title = 'Cryptocurrency App'
 
         screen_manager = ScreenManager()
-        # screen_manager.add_widget(LoginScreen())
+        screen_manager.add_widget(LoginScreen())
         screen_manager.add_widget(MainScreen())
         screen_manager.add_widget(HelpScreen())
         screen_manager.add_widget(SelectCoinScreen())

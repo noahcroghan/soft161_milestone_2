@@ -2,6 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from sqlalchemy import Column, String, Integer, create_engine, ForeignKey, Date, Numeric
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 Persisted = declarative_base()
@@ -81,3 +82,20 @@ class CryptoDatabase(object):
 
     def create_session(self):
         return self.Session()
+
+    def create_user(self, new_username):
+        if not new_username:
+            return None
+
+        session = self.create_session()
+        try:
+            user = User(user_name=new_username)
+            session.add(user)
+            session.commit()
+            return user.user_name  # return the username so UI can use it
+        except SQLAlchemyError as e:
+            print(f"Error adding user: {e}")
+            session.rollback()
+            return None
+        finally:
+            session.close()
