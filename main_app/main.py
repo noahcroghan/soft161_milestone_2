@@ -18,6 +18,9 @@ class MainScreen(Screen):
     pass
 
 
+class SwitchUserScreen(Screen):
+    pass
+
 class MainApp(App):
     def build(self):
         Window.size = (420, 720)
@@ -29,6 +32,7 @@ class MainApp(App):
         screen_manager.add_widget(HelpScreen())
         screen_manager.add_widget(SelectCoinScreen())
         screen_manager.add_widget(ViewHistoryScreen())
+        screen_manager.add_widget(SwitchUserScreen())
 
         inspector.create_inspector(Window, screen_manager) # For Inspection
 
