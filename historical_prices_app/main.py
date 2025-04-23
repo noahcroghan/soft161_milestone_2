@@ -92,6 +92,7 @@ class SelectCoinScreen(Screen):
 
 class ViewHistoryScreen(Screen):
     came_from_select_coin = BooleanProperty(False)
+    is_historical_data_generated = BooleanProperty(False)
 
     def submit_history(self):
         self.ids.history_message.text = ''
@@ -152,9 +153,12 @@ class ViewHistoryScreen(Screen):
             self.ids.chart.source = chart_file
             self.ids.chart.reload()
             self.show_success("Price history loaded successfully.")
-
+            self.is_historical_data_generated = True
         except Exception as exception:
             self.show_error(f'General error occurred:\n{exception}')
+
+    def export_to_csv(self):
+        pass #NYI
 
     def show_error(self, message):
         self.ids.history_message.text = message
