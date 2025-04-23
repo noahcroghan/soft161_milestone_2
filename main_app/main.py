@@ -1,3 +1,4 @@
+import webbrowser
 from sys import stderr
 
 from kivy.app import App
@@ -37,7 +38,9 @@ class LoginScreen(Screen):
 
 
 class HelpScreen(Screen):
-    pass
+    @staticmethod
+    def open_link():
+        webbrowser.open_new_tab('https://docs.coingecko.com/reference/introduction')
 
 
 class MainScreen(Screen):

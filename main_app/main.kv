@@ -136,11 +136,11 @@
                 size_hint_y: None
                 height: dp(40)
 
-            Label:
-                text: 'Visit CoinGecko API documentation: https://www.coingecko.com/en/api/documentation'
-                text_size: self.width, None
+            Button:
+                text: 'Visit CoinGecko API documentation'
                 size_hint_y: None
-                height: self.texture_size[1]
+                height: dp(40)
+                on_press: root.open_link()
 
             Button:
                 text: 'Back to Main Menu'
