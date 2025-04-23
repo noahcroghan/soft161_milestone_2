@@ -103,8 +103,8 @@ class ViewHistoryScreen(Screen):
 
     def submit_history(self):
         self.ids.history_message.text = ''
-        self.ids.line_chart.source = ''
-        self.ids.line_chart.reload()
+        self.ids.chart.source = ''
+        self.ids.chart.reload()
 
         coin_symbol = self.ids.coin_symbol_input.text.strip().upper()
         start_date_str = self.ids.start_date_input.text.strip()
@@ -153,12 +153,12 @@ class ViewHistoryScreen(Screen):
             plt.xticks(rotation=45)
             plt.tight_layout()
 
-            chart_file = "line_chart.png"
+            chart_file = "chart.png"
             plt.savefig(chart_file)
             plt.close()
 
-            self.ids.line_chart.source = chart_file
-            self.ids.line_chart.reload()
+            self.ids.chart.source = chart_file
+            self.ids.chart.reload()
             self.show_success("Price history loaded successfully.")
 
         except Exception as exception:
@@ -179,5 +179,5 @@ class ViewHistoryScreen(Screen):
         self.ids.start_date_input.text = ''
         self.ids.end_date_input.text = ''
         self.ids.history_message.text = ''
-        self.ids.line_chart.source = ''
+        self.ids.chart.source = ''
         self.came_from_select_coin = False
