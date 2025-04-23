@@ -13,7 +13,7 @@ def add_starter_data(session):
 
 def main():
     try:
-        url = CryptoDatabase.construct_mysql_url('localhost', 'crypto')
+        url = CryptoDatabase.construct_mysql_url()
         crypto_database = CryptoDatabase(url)
         crypto_database.ensure_tables_exist()
         print('Tables created.')
