@@ -34,7 +34,7 @@
 
         Button:
             text: 'Login'
-            on_press: app.login_user(existing_users_spinner.text)
+            on_press: root.login_selected_user()
             size_hint_y: None
             height: dp(40)
         Label:
@@ -51,11 +51,16 @@
                 text: 'Cryptocurrency App'
                 font_size: 60
                 font_name: 'Roboto-Bold'
+
         GridLayout:
             cols: 1
             rows: 7
             padding: 20
             spacing: 20
+            Label:
+                text: "User: " + app.current_user if app.current_user else ""
+                font_size: 40
+                font_name: 'Roboto-Bold'
             Button:
                 text: 'New Cryptocurrency'
                 on_press:

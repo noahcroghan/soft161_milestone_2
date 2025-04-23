@@ -2,8 +2,9 @@ import webbrowser
 from sys import stderr
 
 from kivy.app import App
-from kivy.modules import inspector # For Inspection
+from kivy.modules import inspector  # For Inspection
 from kivy.core.window import Window
+from kivy.properties import StringProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -17,12 +18,9 @@ class LoginScreen(Screen):
     def on_pre_enter(self):
         db_session = CryptoDatabase.get_session()
 
-
         usernames = db_session.query(User).all()
 
-
         self.ids.existing_users_spinner.values = [user.user_name for user in usernames]
-
 
     def create_username(self):
         new_username = self.ids.new_username_input.text
@@ -32,9 +30,6 @@ class LoginScreen(Screen):
         db = CryptoDatabase.construct_mysql_url()
         db_session = CryptoDatabase(db)
 
-
-
-
         added_username = db_session.create_user(new_username)
 
         if added_username:
@@ -42,11 +37,19 @@ class LoginScreen(Screen):
                 self.ids.existing_users_spinner.values.append(added_username)
             self.ids.new_username_input.text = ''
             self.ids.feedback_label.text = f"User {added_username} created successfully"
+            App.get_running_app().current_user = added_username
         else:
             print("Failed to add username. The username was not created.")
             self.ids.feedback_label.text = f"Username {added_username} already exists."
 
+    def login_selected_user(self):
+        selected_user = self.ids.existing_users_spinner.text
 
+        if selected_user and selected_user != "Select Existing User":
+            App.get_running_app().current_user = selected_user
+            self.manager.current = "MainScreen"
+        else:
+            self.ids.feedback_label.text = "Please select a user before logging in."
 
 
 class HelpScreen(Screen):
@@ -62,11 +65,13 @@ class MainScreen(Screen):
 class SwitchUserScreen(Screen):
     pass
 
+
 class MainApp(App):
+    current_user = StringProperty('')
+
     def build(self):
         Window.size = (420, 720)
         self.title = 'Cryptocurrency App'
-
 
         screen_manager = ScreenManager()
         screen_manager.add_widget(LoginScreen())
@@ -79,7 +84,7 @@ class MainApp(App):
         screen_manager.add_widget(NewPortfolioScreen())
         screen_manager.add_widget(CheckPortfolioScreen())
 
-        inspector.create_inspector(Window, screen_manager) # For Inspection
+        inspector.create_inspector(Window, screen_manager)  # For Inspection
 
         return screen_manager
 
