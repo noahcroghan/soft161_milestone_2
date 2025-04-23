@@ -3,7 +3,7 @@ from sys import stderr
 
 from sqlalchemy.exc import SQLAlchemyError
 
-from installer.database import CryptoDatabase, Cryptocurrency, HistoricalPrice
+from installer.database import CryptoDatabase, Cryptocurrency, HistoricalPrice, User
 
 
 def add_starter_data(session):
@@ -25,7 +25,11 @@ def add_starter_data(session):
          HistoricalPrice(crypto_id=4, date=date(2025, 4, 14), price=152.00),
          HistoricalPrice(crypto_id=4, date=date(2025, 4, 13), price=155.00),
          HistoricalPrice(crypto_id=5, date=date(2025, 4, 14), price=0.28),
-         HistoricalPrice(crypto_id=5, date=date(2025, 4, 13), price=0.27)])
+         HistoricalPrice(crypto_id=5, date=date(2025, 4, 13), price=0.27),
+
+         User(user_name='Ben'),
+         User(user_name='Jake'),
+         User(user_name='Chan')])
 
 
 def main():

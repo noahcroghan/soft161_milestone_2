@@ -9,15 +9,19 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from historical_prices_app.main import SelectCoinScreen, ViewHistoryScreen
 from portfolio_tracker_app.main import NewCryptoScreen, NewPortfolioScreen, CheckPortfolioScreen
-from installer.database import CryptoDatabase  # Adjust path if needed
+from installer.database import CryptoDatabase, User  # Adjust path if needed
 
 
 class LoginScreen(Screen):
 
     def on_pre_enter(self):
-        db = CryptoDatabase('mysql+mysqlconnector://username:password@localhost:3306/crypto')
-        usernames = db.get_all_users()
-        self.ids.existing_users_spinner.values = usernames
+        db_session = CryptoDatabase.get_session()
+
+
+        usernames = db_session.query(User).all()
+
+
+        self.ids.existing_users_spinner.values = [user.user_name for user in usernames]
 
 
     def create_username(self):
@@ -25,16 +29,20 @@ class LoginScreen(Screen):
         if not new_username:
             return
 
+        db = CryptoDatabase.construct_mysql_url()
+        db_session = CryptoDatabase(db)
 
-        db = CryptoDatabase('mysql+mysqlconnector://username:password@localhost:3306/crypto')
 
 
-        added_username = db.create_user(new_username)
 
+        added_username = db_session.create_user(new_username)
 
         if added_username:
             self.ids.existing_users_spinner.values += [added_username]
             self.ids.new_username_input.text = ''
+        else:
+            print("Failed to add username. The username was not created.")
+
 
 
 class HelpScreen(Screen):
@@ -58,7 +66,7 @@ class MainApp(App):
         session = CryptoDatabase.get_session()
 
         screen_manager = ScreenManager()
-        # screen_manager.add_widget(LoginScreen())
+        screen_manager.add_widget(LoginScreen())
         screen_manager.add_widget(MainScreen())
         screen_manager.add_widget(HelpScreen())
         screen_manager.add_widget(SelectCoinScreen(session))
