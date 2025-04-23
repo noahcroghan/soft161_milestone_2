@@ -9,6 +9,13 @@ from installer.database import CryptoDatabase  # Adjust path if needed
 
 
 class LoginScreen(Screen):
+
+    def on_pre_enter(self):
+        db = CryptoDatabase('mysql+mysqlconnector://username:password@localhost:3306/crypto')
+        usernames = db.get_all_users()
+        self.ids.existing_users_spinner.values = usernames
+
+
     def create_username(self):
         new_username = self.ids.new_username_input.text.strip()
         if not new_username:
@@ -59,4 +66,5 @@ class MainApp(App):
 
 
 if __name__ == '__main__':
+
     MainApp().run()
