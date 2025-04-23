@@ -1,7 +1,10 @@
+from sys import stderr
+
 from kivy.app import App
 from kivy.modules import inspector # For Inspection
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
+from sqlalchemy.exc import SQLAlchemyError
 
 from historical_prices_app.main import SelectCoinScreen, ViewHistoryScreen
 from portfolio_tracker_app.main import NewCryptoScreen, NewPortfolioScreen, CheckPortfolioScreen
@@ -49,12 +52,14 @@ class MainApp(App):
         Window.size = (420, 720)
         self.title = 'Cryptocurrency App'
 
+        session = CryptoDatabase.get_session()
+
         screen_manager = ScreenManager()
-        screen_manager.add_widget(LoginScreen())
+        # screen_manager.add_widget(LoginScreen())
         screen_manager.add_widget(MainScreen())
         screen_manager.add_widget(HelpScreen())
-        screen_manager.add_widget(SelectCoinScreen())
-        screen_manager.add_widget(ViewHistoryScreen())
+        screen_manager.add_widget(SelectCoinScreen(session))
+        screen_manager.add_widget(ViewHistoryScreen(session))
         screen_manager.add_widget(SwitchUserScreen())
         screen_manager.add_widget(NewCryptoScreen())
         screen_manager.add_widget(NewPortfolioScreen())
@@ -66,5 +71,9 @@ class MainApp(App):
 
 
 if __name__ == '__main__':
-
-    MainApp().run()
+    try:
+        MainApp().run()
+    except SQLAlchemyError as exception:
+        print('Database connection failed!', file=stderr)
+        print(f'Cause: {exception}', file=stderr)
+        exit(1)

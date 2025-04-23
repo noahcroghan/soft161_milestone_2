@@ -1,5 +1,5 @@
 import os
-from urllib.parse import quote_plus
+from pathlib import Path
 
 from dotenv import load_dotenv
 from sqlalchemy import Column, String, Integer, create_engine, ForeignKey, Date, Numeric
@@ -45,11 +45,13 @@ class HistoricalPrice(Persisted):
 class CryptoDatabase(object):
     @staticmethod
     def construct_mysql_url():
-        load_dotenv('config.env')
+        env_path = Path(__file__).resolve().parent.parent / 'config.env'
 
-        if not os.path.exists('config.env'):
+        if not env_path.exists():
             raise FileNotFoundError(
                 "config.env file is missing. Please create it and define USERNAME and PORT inside, according to the README")
+
+        load_dotenv(env_path)
 
         username = os.getenv('USERNAME')
         port_string = os.getenv('PORT')
@@ -66,9 +68,8 @@ class CryptoDatabase(object):
         except ValueError:
             raise ValueError("PORT must be a valid integer")
         print(f"Connecting with username: {username}, port: {port}")
-        encoded_password =quote_plus(password)
 
-        return f'mysql+mysqlconnector://{username}:{encoded_password}@localhost:{port}/crypto'
+        return f'mysql+mysqlconnector://{username}:{password}@localhost:{port}/crypto'
 
     @staticmethod
     def get_session():

@@ -17,6 +17,10 @@ class ClickableLabel(ButtonBehavior, Label):
 
 
 class SelectCoinScreen(Screen):
+    def __init__(self, session, **kwargs):
+        super().__init__(**kwargs)
+        self.session = session
+
     def on_enter(self):
         search_text = self.ids.search_input.text.strip()
         self.load_coins(search_text)
@@ -91,6 +95,10 @@ class SelectCoinScreen(Screen):
 
 
 class ViewHistoryScreen(Screen):
+    def __init__(self, session, **kwargs):
+        super().__init__(**kwargs)
+        self.session = session
+
     came_from_select_coin = BooleanProperty(False)
 
     def submit_history(self):
