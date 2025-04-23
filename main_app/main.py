@@ -63,14 +63,13 @@ class MainApp(App):
         Window.size = (420, 720)
         self.title = 'Cryptocurrency App'
 
-        session = CryptoDatabase.get_session()
 
         screen_manager = ScreenManager()
         screen_manager.add_widget(LoginScreen())
         screen_manager.add_widget(MainScreen())
         screen_manager.add_widget(HelpScreen())
-        screen_manager.add_widget(SelectCoinScreen(session))
-        screen_manager.add_widget(ViewHistoryScreen(session))
+        screen_manager.add_widget(SelectCoinScreen())
+        screen_manager.add_widget(ViewHistoryScreen())
         screen_manager.add_widget(SwitchUserScreen())
         screen_manager.add_widget(NewCryptoScreen())
         screen_manager.add_widget(NewPortfolioScreen())
