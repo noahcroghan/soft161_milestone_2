@@ -36,7 +36,7 @@ class LoginScreen(Screen):
             if added_username not in self.ids.existing_users_spinner.values:
                 self.ids.existing_users_spinner.values.append(added_username)
             self.ids.new_username_input.text = ''
-            self.ids.feedback_label.text = f"User {added_username} created successfully"
+            self.ids.feedback_label.text = f"User {added_username} created successfully. Click on existing users"
             App.get_running_app().current_user = added_username
         else:
             print("Failed to add username. The username was not created.")
