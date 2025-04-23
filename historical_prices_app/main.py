@@ -16,10 +16,6 @@ class ClickableLabel(ButtonBehavior, Label):
     pass  # behavior defined elsewhere
 
 
-class MenuScreen(Screen):
-    pass  # screen has no functionality
-
-
 class SelectCoinScreen(Screen):
     def on_enter(self):
         search_text = self.ids.search_input.text.strip()
@@ -121,15 +117,16 @@ class ViewHistoryScreen(Screen):
             self.show_error("Start date must be before or equal to end date.")
             return
 
-        if (end_date - start_date).days > 30:
-            self.show_error("Date range cannot exceed 30 days.")
+        date_range = 90
+        if (end_date - start_date).days > date_range:
+            self.show_error(f"Date range cannot exceed {date_range} days.")
             return
 
         try:
             session = CryptoDatabase.get_session()
 
             historical_prices = (session.query(HistoricalPrice).join(Cryptocurrency,
-                                                                     HistoricalPrice.coingecko_id == Cryptocurrency.coingecko_id).filter(
+                                                                     HistoricalPrice.crypto_id == Cryptocurrency.crypto_id).filter(
                 Cryptocurrency.symbol == coin_symbol, HistoricalPrice.date >= start_date,
                 HistoricalPrice.date <= end_date).order_by(HistoricalPrice.date.asc()).all())
 
