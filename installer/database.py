@@ -37,7 +37,7 @@ class Cryptocurrency(Persisted):
 
 class HistoricalPrice(Persisted):
     __tablename__ = 'historical_prices'
-    id = Column(Integer, primary_key=True)
+    historical_price_id = Column(Integer, primary_key=True)
     crypto_id = Column(Integer, ForeignKey('cryptocurrencies.crypto_id'), nullable=False)
     date = Column(Date, nullable=False)
     price = Column(Numeric(20, 8), nullable=False)
