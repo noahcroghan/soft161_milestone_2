@@ -275,6 +275,14 @@
                     size_hint_y: None
                     height: dp(40)
 
+                Spinner:
+                    id: historical_price_chart_spinner
+                    text: 'Select Chart Type'
+                    values: ['Line Chart', 'Bar Chart', 'Candlestick Chart']
+                    size_hint_y: None
+                    height: dp(40)
+
+
                 Button:
                     text: 'Submit'
                     on_press: root.submit_history()
