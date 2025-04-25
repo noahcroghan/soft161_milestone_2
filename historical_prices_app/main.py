@@ -137,9 +137,20 @@ class ViewHistoryScreen(Screen):
 
             dates = [record.date for record in historical_prices]
             price_values = [record.price for record in historical_prices]
+            chart_type = self.ids.historical_price_chart_spinner.text
 
             plt.figure(figsize=(6, 4))
-            plt.plot(dates, price_values, marker='o', linestyle='-')
+
+            if chart_type == "Select Chart Type":
+                self.show_error("Please select a chart type.")
+                return
+            elif chart_type == "Line Chart":
+                plt.plot(dates, price_values, marker='o', linestyle='-')
+            elif chart_type == "Bar Chart":
+                plt.bar(dates, price_values)
+            elif chart_type == "Candlestick Chart":
+                pass #NYI
+
             plt.xlabel("Date")
             plt.ylabel("Price (USD)")
             plt.title(f"{coin_symbol} Price History")
@@ -177,3 +188,4 @@ class ViewHistoryScreen(Screen):
         self.ids.history_message.text = ''
         self.ids.chart.source = ''
         self.came_from_select_coin = False
+        self.ids.historical_price_chart_spinner.text = 'Select Chart Type'
