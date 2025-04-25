@@ -1,11 +1,16 @@
-import os
-from pathlib import Path
-from urllib.parse import quote_plus
-
-from dotenv import load_dotenv
 from sqlalchemy import Column, String, Integer, create_engine, ForeignKey, Date, Numeric
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import declarative_base, sessionmaker
+
+try:
+    from config import username, password, port
+except ImportError:
+    print(
+        "Failed to get values from config.py. Please follow the instructions in the README. Ensure all values are set.")
+    username = None
+    password = None
+    port = None
+    exit(1)
 
 Persisted = declarative_base()
 
@@ -13,7 +18,7 @@ Persisted = declarative_base()
 class User(Persisted):
     __tablename__ = 'users'
     user_id = Column(Integer, autoincrement=True, primary_key=True)
-    user_name = Column(String(30), nullable=False,unique=True)
+    user_name = Column(String(30), nullable=False, unique=True)
 
 
 class Portfolio(Persisted):
@@ -46,31 +51,7 @@ class HistoricalPrice(Persisted):
 class CryptoDatabase(object):
     @staticmethod
     def construct_mysql_url():
-        env_path = Path(__file__).resolve().parent.parent / 'config.env'
-
-        if not env_path.exists():
-            raise FileNotFoundError(
-                "config.env file is missing. Please create it and define USERNAME and PORT inside, according to the README")
-
-        load_dotenv(env_path)
-
-        username = os.getenv('USERNAME')
-        port_string = os.getenv('PORT')
-        password = os.getenv('PASSWORD')
-
-        if not username:
-            raise ValueError("USERNAME must be set in config.env")
-
-        if not port_string:
-            raise ValueError("PORT must be set in config.env")
-
-        try:
-            port = int(port_string)
-        except ValueError:
-            raise ValueError("PORT must be a valid integer")
-        encoded_password = quote_plus(password)
-
-        return f'mysql+mysqlconnector://{username}:{encoded_password}@localhost:{port}/crypto'
+        return f'mysql+mysqlconnector://{username}:{password}@localhost:{port}/crypto'
 
     @staticmethod
     def get_session():
@@ -83,6 +64,17 @@ class CryptoDatabase(object):
         self.Session = sessionmaker(bind=self.engine)
 
     def ensure_tables_exist(self):
+        # --- BEGIN: Drop and recreate the database for testing only ---
+        from sqlalchemy import text
+        temp_engine = create_engine(f'mysql+mysqlconnector://{username}:{password}@localhost:{port}',
+                                    isolation_level="AUTOCOMMIT")
+        with temp_engine.connect() as conn:
+            conn.execute(text("DROP DATABASE IF EXISTS crypto"))
+            conn.execute(text("CREATE DATABASE crypto"))
+        self.engine = create_engine(self.construct_mysql_url())
+        self.Session = sessionmaker(bind=self.engine)
+        # --- END: Drop and recreate the database for testing only ---
+
         Persisted.metadata.create_all(self.engine)
 
     def create_session(self):
