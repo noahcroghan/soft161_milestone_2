@@ -25,6 +25,7 @@ class LoginScreen(Screen):
     def create_username(self):
         new_username = self.ids.new_username_input.text
         if not new_username:
+            self.ids.login_message.text = "Username cannot be empty. Please enter a username."
             return
 
         db = CryptoDatabase.construct_mysql_url()
