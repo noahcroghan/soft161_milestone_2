@@ -45,7 +45,10 @@ class HistoricalPrice(Persisted):
     historical_price_id = Column(Integer, primary_key=True)
     crypto_id = Column(Integer, ForeignKey('cryptocurrencies.crypto_id'), nullable=False)
     date = Column(Date, nullable=False)
-    price = Column(Numeric(20, 8), nullable=False)
+    open_price = Column(Numeric(20, 8), nullable=False)
+    high_price = Column(Numeric(20, 8), nullable=False)
+    low_price = Column(Numeric(20, 8), nullable=False)
+    close_price = Column(Numeric(20, 8), nullable=False)
 
 
 class CryptoDatabase(object):
