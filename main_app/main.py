@@ -2,15 +2,15 @@ import webbrowser
 from sys import stderr
 
 from kivy.app import App
-from kivy.modules import inspector  # For Inspection
 from kivy.core.window import Window
+from kivy.modules import inspector  # For Inspection
 from kivy.properties import StringProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from sqlalchemy.exc import SQLAlchemyError
 
 from historical_prices_app.main import SelectCoinScreen, ViewHistoryScreen
+from installer.database import CryptoDatabase, User
 from portfolio_tracker_app.main import NewCryptoScreen, NewPortfolioScreen, CheckPortfolioScreen
-from installer.database import CryptoDatabase, User  # Adjust path if needed
 
 
 class LoginScreen(Screen):
