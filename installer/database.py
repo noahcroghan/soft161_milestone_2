@@ -65,6 +65,7 @@ class CryptoDatabase(object):
 
     def ensure_tables_exist(self):
         # --- BEGIN: Drop and recreate the database for testing only ---
+        print('Dropping and recreating database.')
         from sqlalchemy import text
         temp_engine = create_engine(f'mysql+mysqlconnector://{username}:{password}@localhost:{port}',
                                     isolation_level="AUTOCOMMIT")

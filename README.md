@@ -19,7 +19,7 @@ The status of the apps in terms of completeness and correctness (list any known 
 2. Install Python 3.12
 3. Install dependencies (list dependencies here)
 4. Install MySQL Server Community Edition
-5. Make a file under the `installer/` directory called `config.py` with the following contents
+5. Make a file in the project root directory called `config.py` with the following contents
 
 ```python
 username = 'root'  # Change username if applicable
