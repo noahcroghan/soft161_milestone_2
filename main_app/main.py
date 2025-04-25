@@ -36,11 +36,11 @@ class LoginScreen(Screen):
             if added_username not in self.ids.existing_users_spinner.values:
                 self.ids.existing_users_spinner.values.append(added_username)
             self.ids.new_username_input.text = ''
-            self.ids.feedback_label.text = f"User {added_username} created successfully. Click on existing users"
+            self.ids.login_message.text = f"User {added_username} created successfully. Click on existing users"
             App.get_running_app().current_user = added_username
         else:
             print("Failed to add username. The username was not created.")
-            self.ids.feedback_label.text = f"Username {added_username} already exists."
+            self.ids.login_message.text = f"Username {added_username} already exists."
 
     def login_selected_user(self):
         selected_user = self.ids.existing_users_spinner.text
@@ -49,7 +49,7 @@ class LoginScreen(Screen):
             App.get_running_app().current_user = selected_user
             self.manager.current = "MainScreen"
         else:
-            self.ids.feedback_label.text = "Please select a user before logging in."
+            self.ids.login_message.text = "Please select a user before logging in."
 
 
 class HelpScreen(Screen):
