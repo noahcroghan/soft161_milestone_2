@@ -96,6 +96,10 @@ class ViewHistoryScreen(Screen):
     came_from_select_coin = BooleanProperty(False)
     is_historical_data_generated = BooleanProperty(False)
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.export_df = None
+
     def submit_history(self):
         self.ids.history_message.text = ''
         self.ids.chart.source = ''
@@ -143,6 +147,15 @@ class ViewHistoryScreen(Screen):
             high_prices = [float(record.high_price) for record in historical_prices]
             low_prices = [float(record.low_price) for record in historical_prices]
             close_prices = [float(record.close_price) for record in historical_prices]
+
+            self.export_df = pd.DataFrame({
+                'Date': date_list,
+                'Open': open_prices,
+                'High': high_prices,
+                'Low': low_prices,
+                'Close': close_prices
+            })
+
             chart_type = self.ids.historical_price_chart_spinner.text
 
             plt.figure(figsize=(6, 4))
@@ -183,7 +196,11 @@ class ViewHistoryScreen(Screen):
             self.show_error(f'General error occurred:\n{exception}')
 
     def export_to_csv(self):
-        pass  # NYI
+        try:
+            self.export_df.to_csv("historical_data.csv", index=False)
+            self.show_success("Successfully exported CSV.")
+        except Exception as exception:
+            self.show_error(f'Error occurred while exporting to CSV:\n{exception}')
 
     def show_error(self, message):
         self.ids.history_message.text = message
