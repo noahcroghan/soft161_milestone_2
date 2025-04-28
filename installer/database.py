@@ -1,12 +1,12 @@
 from sqlalchemy import Column, String, Integer, create_engine, ForeignKey, Date, Numeric
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import declarative_base, sessionmaker
+from urllib.parse import quote_plus
 
 try:
     from config import username, password, port
 except ImportError:
-    print(
-        "Failed to get values from config.py. Please follow the instructions in the README. Ensure all values are set.")
+    print("Failed to get values from config.py. Please follow the instructions in the README. Ensure all values are set.")
     username = None
     password = None
     port = None
@@ -54,7 +54,8 @@ class HistoricalPrice(Persisted):
 class CryptoDatabase(object):
     @staticmethod
     def construct_mysql_url():
-        return f'mysql+mysqlconnector://{username}:{password}@localhost:{port}/crypto'
+        password_encoded = quote_plus(password)
+        return f'mysql+mysqlconnector://{username}:{password_encoded}@localhost:{port}/crypto'
 
     @staticmethod
     def get_session():
@@ -70,7 +71,8 @@ class CryptoDatabase(object):
         # --- BEGIN: Drop and recreate the database for testing only ---
         print('Dropping and recreating database.')
         from sqlalchemy import text
-        temp_engine = create_engine(f'mysql+mysqlconnector://{username}:{password}@localhost:{port}',
+        password_encoded = quote_plus(password)
+        temp_engine = create_engine(f'mysql+mysqlconnector://{username}:{password_encoded}@localhost:{port}',
                                     isolation_level="AUTOCOMMIT")
         with temp_engine.connect() as conn:
             conn.execute(text("DROP DATABASE IF EXISTS crypto"))
@@ -105,14 +107,14 @@ class CryptoDatabase(object):
         finally:
             session.close()
 
-    def get_all_users(self):
-        session = self.create_session()
+    def get_all_usernames(self):
+        session = CryptoDatabase.get_session()  # Reuse the method to get the session
         try:
             users = session.query(User).all()
-            print(f"Retrieved users from DB: {users}")
             return [user.user_name for user in users]
         except SQLAlchemyError as e:
             print(f"Error fetching users: {e}")
             return []
         finally:
             session.close()
+
