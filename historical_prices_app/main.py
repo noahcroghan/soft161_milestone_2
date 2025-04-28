@@ -1,5 +1,7 @@
 from datetime import datetime
 
+import mplfinance as mpf
+import pandas as pd
 from kivy.metrics import dp
 from kivy.properties import BooleanProperty
 from kivy.uix.behaviors import ButtonBehavior
@@ -10,8 +12,6 @@ from matplotlib import pyplot as plt
 from sqlalchemy.exc import SQLAlchemyError, ProgrammingError
 
 from installer.database import CryptoDatabase, Cryptocurrency, HistoricalPrice
-import matplotlib.dates as mdates
-from mpl_finance import candlestick_ohlc
 
 
 class ClickableLabel(ButtonBehavior, Label):
@@ -121,8 +121,9 @@ class ViewHistoryScreen(Screen):
             return
 
         date_range = 90
-        if (end_date - start_date).days > date_range:
-            self.show_error(f"Date range cannot exceed {date_range} days.")
+        days_difference = (end_date - start_date).days
+        if days_difference < 1 or days_difference > date_range:
+            self.show_error(f"Date range must be between 1 and {date_range}.")
             return
 
         try:
@@ -137,12 +138,11 @@ class ViewHistoryScreen(Screen):
                 self.show_error("No historical data found for selected coin and date range.")
                 return
 
-            dates = [record.date for record in historical_prices]
-            open_prices = [record.open_price for record in historical_prices]
-            high_prices = [record.high_price for record in historical_prices]
-            low_prices = [record.low_price for record in historical_prices]
-            close_prices = [record.close_price for record in historical_prices]
-            price_values = close_prices
+            date_list = [record.date for record in historical_prices]
+            open_prices = [float(record.open_price) for record in historical_prices]
+            high_prices = [float(record.high_price) for record in historical_prices]
+            low_prices = [float(record.low_price) for record in historical_prices]
+            close_prices = [float(record.close_price) for record in historical_prices]
             chart_type = self.ids.historical_price_chart_spinner.text
 
             plt.figure(figsize=(6, 4))
@@ -151,17 +151,19 @@ class ViewHistoryScreen(Screen):
                 self.show_error("Please select a chart type.")
                 return
             elif chart_type == "Line Chart":
-                plt.plot(dates, price_values, marker='o', linestyle='-')
+                plt.plot(date_list, close_prices, marker='o', linestyle='-')
             elif chart_type == "Bar Chart":
-                plt.bar(dates, price_values)
+                plt.bar(date_list, close_prices)
             elif chart_type == "Candlestick Chart":
-                ohlc = []
-                for i in range(len(dates)):
-                    ohlc.append((mdates.date2num(dates[i]), open_prices[i], high_prices[i], low_prices[i], close_prices[i]))
+                ohlc_dataframe = pd.DataFrame(
+                    {'Open': open_prices, 'High': high_prices, 'Low': low_prices, 'Close': close_prices, },
+                    index=date_list)
+                ohlc_dataframe.index = pd.DatetimeIndex(ohlc_dataframe.index)
 
-                ax = plt.gca()
-                ax.xaxis_date()
-                candlestick_ohlc(ax, ohlc, width=0.6, colorup='g', colordown='r')
+                axis = plt.gca()
+
+                mpf.plot(ohlc_dataframe, type='candle', ax=axis, datetime_format='%Y-%m-%d', tight_layout=True,
+                         show_nontrading=True)
 
             plt.xlabel("Date")
             plt.ylabel("Price (USD)")
@@ -181,7 +183,7 @@ class ViewHistoryScreen(Screen):
             self.show_error(f'General error occurred:\n{exception}')
 
     def export_to_csv(self):
-        pass #NYI
+        pass  # NYI
 
     def show_error(self, message):
         self.ids.history_message.text = message
