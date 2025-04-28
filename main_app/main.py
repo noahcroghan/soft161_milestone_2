@@ -2,6 +2,7 @@ import webbrowser
 from sys import stderr
 
 from kivy.app import App
+from kivy.modules import inspector  # For Inspection
 from kivy.core.window import Window
 from kivy.modules import inspector  # For Inspection
 from kivy.properties import StringProperty
@@ -10,22 +11,27 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from historical_prices_app.main import SelectCoinScreen, ViewHistoryScreen
 from installer.database import CryptoDatabase, User
+from historical_prices_app.remove_me.config import username
 from portfolio_tracker_app.main import NewCryptoScreen, NewPortfolioScreen, CheckPortfolioScreen
+from installer.database import CryptoDatabase, User  # Adjust path if needed
 
+
+def get_all_usernames():
+    db_session = CryptoDatabase.get_session()
+    return [user.user_name for user in db_session.query(User).all()]
 
 class LoginScreen(Screen):
 
-    def on_pre_enter(self):
-        db_session = CryptoDatabase.get_session()
+    def update_spinner_values(self):
+        usernames = get_all_usernames()
+        self.ids.existing_users_spinner.values = usernames
 
-        usernames = db_session.query(User).all()
-
-        self.ids.existing_users_spinner.values = [user.user_name for user in usernames]
+    def on_enter(self):
+        self.update_spinner_values()
 
     def create_username(self):
         new_username = self.ids.new_username_input.text
         if not new_username:
-            self.ids.login_message.text = "Username cannot be empty. Please enter a username."
             return
 
         db = CryptoDatabase.construct_mysql_url()
@@ -64,7 +70,29 @@ class MainScreen(Screen):
 
 
 class SwitchUserScreen(Screen):
-    pass
+    def update_spinner(self):
+        usernames = get_all_usernames()
+        self.ids.existing_users_spinner.values = usernames
+
+        if self.ids.existing_users_spinner.values:
+            self.ids.existing_users_spinner.text = self.ids.existing_users_spinner.values[0]
+        else:
+            self.ids.existing_users_spinner.text = 'Select Existing User'
+
+    def get_new_user(self):
+        login_screen = self.manager.get_screen('LoginScreen')
+        login_screen.create_username()
+
+        self.update_spinner()
+
+    def on_enter(self):
+        self.update_spinner()
+        selected_user = self.ids.existing_users_spinner.text
+        if selected_user and selected_user != "Select Existing User":
+            App.get_running_app().current_user = selected_user
+
+            main_screen = self.manager.get_screen('MainScreen')
+            main_screen.on_enter()
 
 
 class MainApp(App):

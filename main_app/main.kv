@@ -28,13 +28,13 @@
 
         Button:
             text: 'Create Profile'
-            on_press: root.create_username()
+            on_press: app.root.get_screen('LoginScreen').create_username()
             size_hint_y: None
             height: dp(40)
 
         Button:
             text: 'Login'
-            on_press: root.login_selected_user()
+            on_press: app.root.get_screen('LoginScreen').login_selected_user()
             size_hint_y: None
             height: dp(40)
         Label:
@@ -58,7 +58,7 @@
             padding: 20
             spacing: 20
             Label:
-                text: "User: " + app.current_user if app.current_user else ""
+                text: "Welcome: " + app.current_user if app.current_user else ""
                 font_size: 40
                 font_name: 'Roboto-Bold'
             Button:
@@ -101,8 +101,45 @@
     name: 'SwitchUserScreen'
     BoxLayout:
         orientation: 'vertical'
+        padding: [50, 100]
+        spacing: 20
+
         Label:
-            text: 'placeholder'
+            text: 'Switch the User'
+            font_size: 40
+            font_name: 'Roboto-Bold'
+            size_hint_y: None
+            height: dp(60)
+
+        Spinner:
+            id: existing_users_spinner
+            text: 'Select Existing User'
+            values: []
+            size_hint_y: None
+            height: dp(40)
+
+        TextInput:
+            id: new_username_input
+            hint_text: 'Enter New Username'
+            multiline: False
+            size_hint_y: None
+            height: dp(40)
+
+        Button:
+            text: 'Create Profile'
+            on_press: root.get_new_user()
+            size_hint_y: None
+            height: dp(40)
+
+        Button:
+            text: 'Login'
+            on_press: root.manager.get_screen('LoginScreen').login_selected_user()
+            size_hint_y: None
+            height: dp(40)
+        Label:
+            id: feedback_label
+            text: ""
+
         Button:
             text: 'BACK'
             on_press:
