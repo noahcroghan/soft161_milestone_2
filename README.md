@@ -1,11 +1,9 @@
 # Cryptocurrency App
 
-[//]: # (- The names of the apps and the installer)
-
-[//]: # (- A description of each app)
-
 - `main_app/main.py` Primary GUI Application
-- `installer/database_installer.py` Creates tables and records in database
+- `historical_prices_app/main.py` Code for the Historical Price Viewer App
+- `portfolio_tracker_app/main.py` Code for the Portfolio Tracker App
+- `installer/database_installer.py` Creates tables and records in the database
 
 # Completeness
 
@@ -27,6 +25,6 @@ port = 3306  # Change port if applicable
 password = ""  # Enter password between quotes
 ```
 
-In here, set your password, and change your port and username if necessary.
+In here, set your password and change your port and username if necessary.
 
 Continue more instructions below...
