@@ -48,13 +48,25 @@
 #     app = PortfolioTrackerApp()
 #     app.run()
 from kivy.uix.screenmanager import Screen
+from installer.database import CryptoDatabase, Cryptocurrency  # Adjust path if needed
 
+
+
+def get_all_cryptocurrencies():
+    db_session = CryptoDatabase.get_session()
+    return [crypto.name for crypto in db_session.query(Cryptocurrency).all()]
 
 class NewCryptoScreen(Screen):
     pass
 
 class NewPortfolioScreen(Screen):
-    pass
+
+    def update_spinner_values(self):
+        cryptocurrencies = get_all_cryptocurrencies()
+        self.ids.new_portfolio_crypto.values = cryptocurrencies
+
+    def on_enter(self):
+        self.update_spinner_values()
 
 class CheckPortfolioScreen(Screen):
     pass
