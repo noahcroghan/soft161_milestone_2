@@ -70,7 +70,7 @@
                 text: 'New Portfolio Entry'
                 on_press:
                     root.manager.transition.direction = 'left'
-                    root.manager.current = 'NewCryptoScreen'
+                    root.manager.current = 'NewPortfolioScreen'
             Button:
                 text: 'Check Portfolio Value'
                 on_press:
@@ -452,14 +452,15 @@
             text: 'New Portfolio Entry'
             font_size: 50
             font_name: 'Roboto-Bold'
-        Label:
-            text: "Crypto Name"
-            font_size: 35
-            text_size: self.size
-            halign: 'left'
-        TextInput:
-            id: new_portfolio_in_1
-#            text: f'{app.input_text}'
+#        Label:
+#            text: "Crypto Name"
+#            font_size: 35
+#            text_size: self.size
+#            halign: 'left'
+        Spinner:
+            id: new_portfolio_crypto
+            text: 'Crypto Name'
+            values: []
             size_hint_y: None
             height: 50
             font_size: 30
@@ -505,7 +506,7 @@
                 on_press:
                     root.manager.transition.direction = 'right'
                     root.manager.current = 'MainScreen'
-                    app.go_to_home(new_portfolio_message)
+#                    app.go_to_home(new_portfolio_message)
             Button:
                 text: "SUBMIT"
                 font_size: 80
