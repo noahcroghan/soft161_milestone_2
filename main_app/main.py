@@ -16,14 +16,13 @@ from portfolio_tracker_app.main import NewCryptoScreen, NewPortfolioScreen, Chec
 from installer.database import CryptoDatabase, User  # Adjust path if needed
 
 
-def get_all_usernames():
-    db_session = CryptoDatabase.get_session()
-    return [user.user_name for user in db_session.query(User).all()]
+
 
 class LoginScreen(Screen):
 
     def update_spinner_values(self):
-        usernames = get_all_usernames()
+        db = CryptoDatabase(CryptoDatabase.construct_mysql_url())
+        usernames = db.get_all_usernames()
         self.ids.existing_users_spinner.values = usernames
 
     def on_enter(self):
@@ -71,7 +70,8 @@ class MainScreen(Screen):
 
 class SwitchUserScreen(Screen):
     def update_spinner(self):
-        usernames = get_all_usernames()
+        db = CryptoDatabase(CryptoDatabase.construct_mysql_url())
+        usernames = db.get_all_usernames()
         self.ids.existing_users_spinner.values = usernames
 
         if self.ids.existing_users_spinner.values:
