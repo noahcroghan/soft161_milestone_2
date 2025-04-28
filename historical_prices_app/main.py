@@ -10,6 +10,8 @@ from matplotlib import pyplot as plt
 from sqlalchemy.exc import SQLAlchemyError, ProgrammingError
 
 from installer.database import CryptoDatabase, Cryptocurrency, HistoricalPrice
+import matplotlib.dates as mdates
+from mpl_finance import candlestick_ohlc
 
 
 class ClickableLabel(ButtonBehavior, Label):
@@ -136,7 +138,11 @@ class ViewHistoryScreen(Screen):
                 return
 
             dates = [record.date for record in historical_prices]
-            price_values = [record.price for record in historical_prices]
+            open_prices = [record.open_price for record in historical_prices]
+            high_prices = [record.high_price for record in historical_prices]
+            low_prices = [record.low_price for record in historical_prices]
+            close_prices = [record.close_price for record in historical_prices]
+            price_values = close_prices
             chart_type = self.ids.historical_price_chart_spinner.text
 
             plt.figure(figsize=(6, 4))
@@ -149,7 +155,13 @@ class ViewHistoryScreen(Screen):
             elif chart_type == "Bar Chart":
                 plt.bar(dates, price_values)
             elif chart_type == "Candlestick Chart":
-                pass #NYI
+                ohlc = []
+                for i in range(len(dates)):
+                    ohlc.append((mdates.date2num(dates[i]), open_prices[i], high_prices[i], low_prices[i], close_prices[i]))
+
+                ax = plt.gca()
+                ax.xaxis_date()
+                candlestick_ohlc(ax, ohlc, width=0.6, colorup='g', colordown='r')
 
             plt.xlabel("Date")
             plt.ylabel("Price (USD)")
