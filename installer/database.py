@@ -58,6 +58,10 @@ class CryptoDatabase(object):
         return f'mysql+mysqlconnector://{username}:{password_encoded}@localhost:{port}/crypto'
 
     @staticmethod
+    def construct_in_memory_url():
+        return 'sqlite:///'
+
+    @staticmethod
     def get_session():
         url = CryptoDatabase.construct_mysql_url()
         crypto_database = CryptoDatabase(url)
