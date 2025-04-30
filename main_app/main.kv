@@ -58,7 +58,8 @@
             padding: 20
             spacing: 20
             Label:
-                text: "Welcome: " + app.current_user if app.current_user else ""
+                id: welcome_label
+                text: "Welcome: " + app.current_user
                 font_size: 40
                 font_name: 'Roboto-Bold'
             Button:
@@ -137,7 +138,7 @@
             size_hint_y: None
             height: dp(40)
         Label:
-            id: feedback_label
+            id: login_message
             text: ""
 
         Button:

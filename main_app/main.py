@@ -23,10 +23,13 @@ class LoginScreen(Screen):
     def on_enter(self):
         self.update_spinner_values()
 
-    def create_username(self):
-        new_username = self.ids.new_username_input.text
+    def create_username(self,target_screen=None):
+        new_username = self.ids.new_username_input.text if not target_screen else target_screen.ids.new_username_input.text
         if not new_username:
-            self.ids.login_message.text = "Username cannot be empty. Please enter a username."
+            if target_screen:
+                self.ids.login_message.text = "Username cannot be empty. Please enter a username."
+            else:
+                self.ids.login_message.text = "Username cannot be empty. Please enter a username."
             return
 
         db = CryptoDatabase.construct_mysql_url()
@@ -35,14 +38,25 @@ class LoginScreen(Screen):
         added_username = db_session.create_user(new_username)
 
         if added_username:
-            if added_username not in self.ids.existing_users_spinner.values:
-                self.ids.existing_users_spinner.values.append(added_username)
-            self.ids.new_username_input.text = ''
-            self.ids.login_message.text = f"User {added_username} created successfully. Click on existing users"
+            # Update spinner
+            if target_screen:
+                if added_username not in target_screen.ids.existing_users_spinner.values:
+                    target_screen.ids.existing_users_spinner.values.append(added_username)
+                target_screen.ids.new_username_input.text = ''
+                target_screen.ids.login_message.text = f"User {added_username} created successfully. Click on existing users"
+            else:
+                if added_username not in self.ids.existing_users_spinner.values:
+                    self.ids.existing_users_spinner.values.append(added_username)
+                self.ids.new_username_input.text = ''
+                self.ids.login_message.text = f"User {added_username} created successfully. Click on existing users"
+
             App.get_running_app().current_user = added_username
         else:
             print("Failed to add username. The username was not created.")
-            self.ids.login_message.text = f"Username {added_username} already exists."
+            if target_screen:
+                target_screen.ids.login_message.text = f"Username {added_username} already exists."
+            else:
+                self.ids.login_message.text = f"Username {added_username} already exists."
 
     def login_selected_user(self):
         selected_user = self.ids.existing_users_spinner.text
@@ -80,8 +94,12 @@ class SwitchUserScreen(Screen):
             self.ids.existing_users_spinner.text = 'Select Existing User'
 
     def get_new_user(self):
-        login_screen = self.manager.get_screen('LoginScreen')
-        login_screen.create_username()
+
+        if self.ids.new_username_input.focus:
+            login_screen = self.manager.get_screen('LoginScreen')
+            login_screen.create_username(self)
+
+
 
         self.update_spinner()
 
