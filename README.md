@@ -7,11 +7,9 @@
 
 # Completeness
 
-The status of the apps in terms of completeness and correctness (list any known issues or bugs)
+[//]: # (TODO: The status of the apps in terms of completeness and correctness &#40;list any known issues or bugs&#41;)
 
 # Instructions
-
-[//]: # (Instructions for building and running the apps, including any required dependencies and commands to create the database)
 
 1. Clone the repository
 2. Install Python 3.12
@@ -25,6 +23,11 @@ port = 3306  # Change port if applicable
 password = ""  # Enter password between quotes
 ```
 
-In here, set your password and change your port and username if necessary.
-
-Continue more instructions below...
+6. Enter a MySQL shell, typically by running `mysql` from a terminal
+7. In the MySQL shell, run the following commands
+    - `DROP DATABASE IF EXISTS crypto;`
+    - `CREATE DATABASE crypto;`
+8. Run `installer/database_installer.py`
+    - This will populate the database. You can verify it worked with the following commands:
+        - `USE crypto;` Will select the database
+        - `SELECT * FROM cryptocurrencies;` Will get all cryptocurrency coins in the database.
