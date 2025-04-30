@@ -26,6 +26,7 @@ class LoginScreen(Screen):
     def create_username(self):
         new_username = self.ids.new_username_input.text
         if not new_username:
+            self.ids.login_message.text = "Username cannot be empty. Please enter a username."
             return
 
         db = CryptoDatabase.construct_mysql_url()
@@ -63,6 +64,9 @@ class MainScreen(Screen):
     pass
 
 
+# TODO: Proper error message like LoginScreen when username is empty.
+#  Also if the user tries to add a new profile the spinner isn't updated.
+#  Maybe refactor since both screens do similar things
 class SwitchUserScreen(Screen):
     def update_spinner(self):
         db = CryptoDatabase(CryptoDatabase.construct_mysql_url())
