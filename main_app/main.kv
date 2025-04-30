@@ -164,20 +164,65 @@
                 height: dp(50)
 
             Label:
-                text: 'Instructions for Using the App'
-                font_size: 30
+                text: 'Using the Main App'
+                font_size: 35
                 size_hint_y: None
                 height: dp(40)
 
             Label:
-                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                text: "Placeholder" # TODO: Add instructions
+                font_size: 28
                 text_size: self.width, None
+                halign: 'left'
+                valign: 'top'
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            Label:
+                text: 'Using the Portfolio Tracker App'
+                font_size: 35
+                size_hint_y: None
+                height: dp(40)
+
+            Label:
+                text: "Placeholder" # TODO: Add instructions
+                markup: True
+                font_size: 28
+                text_size: self.width, None
+                halign: 'left'
+                valign: 'top'
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            Label:
+                text: 'Using the Historical Price Viewer App'
+                font_size: 35
+                size_hint_y: None
+                height: dp(40)
+
+            Label:
+                text:
+                    "[b]Select Coin Screen[/b]\n\n" \
+                    "- Scroll to see the top 100 cryptocurrencies.\n\n" \
+                    "- Search for coins (by name or symbol) using the search bar.\n\n" \
+                    "- View coin names, symbols, current prices, and last 24 hour percent change.\n\n" \
+                    "- Tap on a coin to be sent to the history screen for the selected coin.\n\n" \
+                    "[b]View History Screen[/b]\n\n" \
+                    "- Enter a coin's symbol (or leave previously selected coin).\n\n" \
+                    "- Choose the date range and chart type.\n\n" \
+                    "- Tap Submit to view a price chart.\n\n" \
+                    "- Tap Export to save data to a CSV."
+                markup: True
+                font_size: 28
+                text_size: self.width, None
+                halign: 'left'
+                valign: 'top'
                 size_hint_y: None
                 height: self.texture_size[1]
 
             Label:
                 text: 'API Reference'
-                font_size: 30
+                font_size: 35
                 size_hint_y: None
                 height: dp(40)
 
