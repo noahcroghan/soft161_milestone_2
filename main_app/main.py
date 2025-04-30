@@ -2,7 +2,6 @@ import webbrowser
 from sys import stderr
 
 from kivy.app import App
-from kivy.modules import inspector  # For Inspection
 from kivy.core.window import Window
 from kivy.modules import inspector  # For Inspection
 from kivy.properties import StringProperty
@@ -10,12 +9,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from sqlalchemy.exc import SQLAlchemyError
 
 from historical_prices_app.main import SelectCoinScreen, ViewHistoryScreen
-from installer.database import CryptoDatabase, User
-from historical_prices_app.remove_me.config import username
+from installer.database import CryptoDatabase
 from portfolio_tracker_app.main import NewCryptoScreen, NewPortfolioScreen, CheckPortfolioScreen
-from installer.database import CryptoDatabase, User  # Adjust path if needed
-
-
 
 
 class LoginScreen(Screen):
@@ -74,8 +69,9 @@ class SwitchUserScreen(Screen):
         usernames = db.get_all_usernames()
         self.ids.existing_users_spinner.values = usernames
 
-        if self.ids.existing_users_spinner.values:
-            self.ids.existing_users_spinner.text = self.ids.existing_users_spinner.values[0]
+        current_user = App.get_running_app().current_user
+        if current_user in self.ids.existing_users_spinner.values:
+            self.ids.existing_users_spinner.text = current_user
         else:
             self.ids.existing_users_spinner.text = 'Select Existing User'
 
@@ -87,12 +83,14 @@ class SwitchUserScreen(Screen):
 
     def on_enter(self):
         self.update_spinner()
+
+    def confirm_user_switch(self):
         selected_user = self.ids.existing_users_spinner.text
         if selected_user and selected_user != "Select Existing User":
             App.get_running_app().current_user = selected_user
-
-            main_screen = self.manager.get_screen('MainScreen')
-            main_screen.on_enter()
+            self.manager.current = "MainScreen"
+        else:
+            self.ids.login_message.text = "Please select a user before switching."
 
 
 class MainApp(App):
