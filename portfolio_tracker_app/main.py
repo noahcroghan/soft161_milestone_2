@@ -25,6 +25,12 @@ class NewCryptoScreen(Screen):
             return
         try:
             price = float(price)
+            if price < 0:
+                self.show_error("Price cannot be negative.")
+                return
+            elif price > 1000000000000:
+                self.show_error("Price cannot be greater than $10,000,000,000.")
+                return
         except ValueError:
             self.show_error("Price field is required.")
             return
@@ -61,6 +67,10 @@ class NewCryptoScreen(Screen):
 
     def on_leave(self):
         self.ids.new_crypto_message.text = ""
+        self.ids.new_crypto_name_input.text = ""
+        self.ids.new_crypto_symbol_input.text = ""
+        self.ids.new_crypto_price_input.text = ""
+        self.ids.new_crypto_percent_change_24h_input.text = ""
 
 
 class NewPortfolioScreen(Screen):
