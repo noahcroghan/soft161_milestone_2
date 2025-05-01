@@ -1,12 +1,11 @@
 import webbrowser
-from sys import stderr
 
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.modules import inspector  # For Inspection
 from kivy.properties import StringProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, ProgrammingError
 
 from historical_prices_app.main import SelectCoinScreen, ViewHistoryScreen
 from installer.database import CryptoDatabase
@@ -23,7 +22,7 @@ class LoginScreen(Screen):
     def on_enter(self):
         self.update_spinner_values()
 
-    def create_username(self,target_screen=None):
+    def create_username(self, target_screen=None):
         new_username = self.ids.new_username_input.text if not target_screen else target_screen.ids.new_username_input.text
         if not new_username:
             if target_screen:
@@ -31,32 +30,32 @@ class LoginScreen(Screen):
             else:
                 self.ids.login_message.text = "Username cannot be empty. Please enter a username."
             return
+        try:
+            db_session = CryptoDatabase.get_session()
 
-        db = CryptoDatabase.construct_mysql_url()
-        db_session = CryptoDatabase(db)
+            added_username = db_session.create_user(new_username)
 
-        added_username = db_session.create_user(new_username)
+            if added_username:
+                if target_screen:
+                    if added_username not in target_screen.ids.existing_users_spinner.values:
+                        target_screen.ids.existing_users_spinner.values.append(added_username)
+                    target_screen.ids.new_username_input.text = ''
+                    target_screen.ids.login_message.text = f"User {added_username} created successfully. Click on existing users"
+                else:
+                    if added_username not in self.ids.existing_users_spinner.values:
+                        self.ids.existing_users_spinner.values.append(added_username)
+                    self.ids.new_username_input.text = ''
+                    self.ids.login_message.text = f"User {added_username} created successfully. Click on existing users"
 
-        if added_username:
-            # Update spinner
-            if target_screen:
-                if added_username not in target_screen.ids.existing_users_spinner.values:
-                    target_screen.ids.existing_users_spinner.values.append(added_username)
-                target_screen.ids.new_username_input.text = ''
-                target_screen.ids.login_message.text = f"User {added_username} created successfully. Click on existing users"
+                App.get_running_app().current_user = added_username
             else:
-                if added_username not in self.ids.existing_users_spinner.values:
-                    self.ids.existing_users_spinner.values.append(added_username)
-                self.ids.new_username_input.text = ''
-                self.ids.login_message.text = f"User {added_username} created successfully. Click on existing users"
-
-            App.get_running_app().current_user = added_username
-        else:
-            print("Failed to add username. The username was not created.")
-            if target_screen:
-                target_screen.ids.login_message.text = f"Username {added_username} already exists."
-            else:
-                self.ids.login_message.text = f"Username {added_username} already exists."
+                print("Failed to add username. The username was not created.")
+                if target_screen:
+                    target_screen.ids.login_message.text = f"Username {added_username} already exists."
+                else:
+                    self.ids.login_message.text = f"Username {added_username} already exists."
+        except SQLAlchemyError:
+            self.ids.login_message.text = "Database connection failed. Make sure to run the installer first."
 
     def login_selected_user(self):
         selected_user = self.ids.existing_users_spinner.text
@@ -99,8 +98,6 @@ class SwitchUserScreen(Screen):
             login_screen = self.manager.get_screen('LoginScreen')
             login_screen.create_username(self)
 
-
-
         self.update_spinner()
 
     def on_enter(self):
@@ -141,7 +138,6 @@ class MainApp(App):
 if __name__ == '__main__':
     try:
         MainApp().run()
-    except SQLAlchemyError as exception:
-        print('Database connection failed!', file=stderr)
-        print(f'Cause: {exception}', file=stderr)
+    except ProgrammingError:
+        print('Database connection failed! Make sure to follow the instructions in the README.')
         exit(1)

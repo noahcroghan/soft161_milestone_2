@@ -1,12 +1,13 @@
-from sqlalchemy import Column, String, Integer, create_engine, ForeignKey, Date, Numeric
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import declarative_base, sessionmaker
 from urllib.parse import quote_plus
+
+from sqlalchemy import Column, String, Integer, create_engine, ForeignKey, Date, Numeric
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 try:
     from config import username, password, port
 except ImportError:
-    print("Failed to get values from config.py. Please follow the instructions in the README. Ensure all values are set.")
+    print(
+        "Failed to get values from config.py. Please follow the instructions in the README. Ensure all values are set.")
     username = None
     password = None
     port = None
@@ -95,30 +96,16 @@ class CryptoDatabase(object):
             return None
 
         session = self.create_session()
-        try:
-            existing_user = session.query(User).filter(User.user_name == new_username).first()
-            if existing_user:
-                print(f"User with username '{new_username}' already exists.")
-                return None
-            user = User(user_name=new_username)
-            session.add(user)
-            session.commit()
-            return user.user_name  # return the username so UI can use it
-        except SQLAlchemyError as e:
-            print(f"Error adding user: {e}")
-            session.rollback()
+        existing_user = session.query(User).filter(User.user_name == new_username).first()
+        if existing_user:
             return None
-        finally:
-            session.close()
+        user = User(user_name=new_username)
+        session.add(user)
+        session.commit()
+        return user.user_name
 
-    def get_all_usernames(self):
-        session = CryptoDatabase.get_session()  # Reuse the method to get the session
-        try:
-            users = session.query(User).all()
-            return [user.user_name for user in users]
-        except SQLAlchemyError as e:
-            print(f"Error fetching users: {e}")
-            return []
-        finally:
-            session.close()
-
+    @staticmethod
+    def get_all_usernames():
+        session = CryptoDatabase.get_session()
+        users = session.query(User).all()
+        return [user.user_name for user in users]
