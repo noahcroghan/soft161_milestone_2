@@ -31,9 +31,8 @@ class LoginScreen(Screen):
                 self.ids.login_message.text = "Username cannot be empty. Please enter a username."
             return
         try:
-            db_session = CryptoDatabase.get_session()
-
-            added_username = db_session.create_user(new_username)
+            db = CryptoDatabase(CryptoDatabase.construct_mysql_url())
+            added_username = db.create_user(new_username)
 
             if added_username:
                 if target_screen:
