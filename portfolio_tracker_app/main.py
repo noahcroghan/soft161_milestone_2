@@ -1,4 +1,5 @@
 from kivy.uix.screenmanager import Screen
+from sqlalchemy.exc import SQLAlchemyError
 
 from installer.database import CryptoDatabase, Cryptocurrency
 
@@ -44,26 +45,33 @@ class NewCryptoScreen(Screen):
             self.show_error("Percent change field is required.")
             return
 
-        session = CryptoDatabase.get_session()
-        crypto_exists = session.query(Cryptocurrency).filter((Cryptocurrency.symbol == symbol) | (Cryptocurrency.name == name)).first()
+        try:
+            session = CryptoDatabase.get_session()
+            crypto_exists = session.query(Cryptocurrency).filter(
+                (Cryptocurrency.symbol == symbol) | (Cryptocurrency.name == name)).first()
 
-        if crypto_exists:
-            self.show_error("Submitted crypto already exists.")
-            return
+            if crypto_exists:
+                self.show_error("Submitted crypto already exists.")
+                return
 
-        new_crypto = Cryptocurrency(name=name, symbol=symbol, current_price=price, percent_change_24h=percent_change_24h)
-        session.add(new_crypto)
-        session.commit()
+            new_crypto = Cryptocurrency(name=name, symbol=symbol, current_price=price,
+                                        percent_change_24h=percent_change_24h)
+            session.add(new_crypto)
+            session.commit()
 
-        self.show_success(f"New crypto '{name}' [i]({symbol})[/i] added successfully.")
+            self.show_success(f"New crypto '{name}' [i]({symbol})[/i] added successfully.")
+        except SQLAlchemyError as sql_alchemy_error:
+            self.show_error(f'General Database error:\n{sql_alchemy_error}')
+        except Exception as exception:
+            self.show_error(f'General error occurred:\n{exception}')
 
     def show_error(self, message):
         self.ids.new_crypto_message.text = message
-        self.ids.new_crypto_message.color = ((214/256), (69/256), (69/256), 1.0)
+        self.ids.new_crypto_message.color = ((214 / 256), (69 / 256), (69 / 256), 1.0)
 
     def show_success(self, message):
         self.ids.new_crypto_message.text = message
-        self.ids.new_crypto_message.color = ((50/256), (222/256), (153/256), 1.0)
+        self.ids.new_crypto_message.color = ((50 / 256), (222 / 256), (153 / 256), 1.0)
 
     def on_leave(self):
         self.ids.new_crypto_message.text = ""
