@@ -428,7 +428,7 @@
     name: "NewCryptoScreen"
     GridLayout:
         cols: 1
-        rows: 9
+        rows: 11
         padding: 20
         spacing: 10
         Label:
@@ -443,7 +443,7 @@
         TextInput:
             id: new_crypto_name_input
             size_hint_y: None
-            hint_text: "e.g. 'bitcoin'"
+            hint_text: "(e.g. 'bitcoin')"
             multiline: False
             height: 50
             font_size: 30
@@ -455,7 +455,7 @@
         TextInput:
             id: new_crypto_symbol_input
             size_hint_y: None
-            hint_text: "e.g. 'btc'"
+            hint_text: "(e.g. 'btc')"
             multiline: False
             height: 50
             font_size: 30
@@ -469,11 +469,25 @@
             size_hint_y: None
             height: 50
             multiline: False
-            hint_text: "e.g. 51863.04"
+            hint_text: "(e.g. 51863.04)"
+            input_filter: 'float'
+            font_size: 30
+        Label:
+            text: "Percent Change last 24H"
+            font_size: 35
+            text_size: self.size
+            halign: 'left'
+        TextInput:
+            id: new_crypto_percent_change_24h_input
+            size_hint_y: None
+            height: 50
+            multiline: False
+            hint_text: "(e.g. 0.04)"
             input_filter: 'float'
             font_size: 30
         Label:
             id: new_crypto_message
+            markup: True
             text: ""
             color: ((50/256), (222/256), (153/256), 1.0)
             font_size: 28

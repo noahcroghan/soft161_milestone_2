@@ -10,23 +10,46 @@ def get_all_cryptocurrencies():
 
 class NewCryptoScreen(Screen):
     def submit_new_crypto(self):
-        name = self.ids.new_crypto_name_input.text
-        symbol = self.ids.new_crypto_symbol_input.text
+        name = self.ids.new_crypto_name_input.text.strip().capitalize()
+        symbol = self.ids.new_crypto_symbol_input.text.strip().upper()
         price = self.ids.new_crypto_price_input.text
+        percent_change_24h = self.ids.new_crypto_percent_change_24h_input.text
         if not name or len(name) > 50:
             self.show_error("Name field is required and must be less than 50 characters long.")
             return
         if not symbol or len(symbol) > 15:
             self.show_error("Symbol field is required and must be less than 15 characters long.")
             return
+        if " " in symbol:
+            self.show_error("Symbol field cannot contain spaces.")
+            return
         try:
             price = float(price)
         except ValueError:
             self.show_error("Price field is required.")
+            return
 
-        else:
-            self.show_success("Success!")
-            # TODO: Add new crypto to database
+        try:
+            percent_change_24h = float(percent_change_24h)
+            if percent_change_24h < -100 or percent_change_24h > 1000:
+                self.show_error("Percent change must be between -100% and 1000%.")
+                return
+        except ValueError:
+            self.show_error("Percent change field is required.")
+            return
+
+        session = CryptoDatabase.get_session()
+        crypto_exists = session.query(Cryptocurrency).filter((Cryptocurrency.symbol == symbol) | (Cryptocurrency.name == name)).first()
+
+        if crypto_exists:
+            self.show_error("Submitted crypto already exists.")
+            return
+
+        new_crypto = Cryptocurrency(name=name, symbol=symbol, current_price=price, percent_change_24h=percent_change_24h)
+        session.add(new_crypto)
+        session.commit()
+
+        self.show_success(f"New crypto '{name}' [i]({symbol})[/i] added successfully.")
 
     def show_error(self, message):
         self.ids.new_crypto_message.text = message
@@ -35,6 +58,9 @@ class NewCryptoScreen(Screen):
     def show_success(self, message):
         self.ids.new_crypto_message.text = message
         self.ids.new_crypto_message.color = ((50/256), (222/256), (153/256), 1.0)
+
+    def on_leave(self):
+        self.ids.new_crypto_message.text = ""
 
 
 class NewPortfolioScreen(Screen):
