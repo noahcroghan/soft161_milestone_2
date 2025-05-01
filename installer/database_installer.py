@@ -11,7 +11,7 @@ coins_list = coin_gecko_api.get_coins_markets(vs_currency='usd')
 
 
 def add_starter_data(session):
-    # This is incomplete. It should get starter data from the API.
+    # TODO: This is incomplete. It should get starter data from the API.
     for coin_details in coins_list:
         session.add(Cryptocurrency(name=coin_details['id'], symbol=coin_details['symbol'],
                                    current_price=coin_details['current_price'],
