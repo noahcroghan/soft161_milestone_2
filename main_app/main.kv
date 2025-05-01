@@ -1,3 +1,5 @@
+# TODO: Make theming/styling more similar between all screens
+
 <LoginScreen>:
     name: 'LoginScreen'
     BoxLayout:
@@ -439,9 +441,10 @@
             text_size: self.size
             halign: 'left'
         TextInput:
-            id: new_crypto_in_1
-#            text: f'{app.input_text}'
+            id: new_crypto_name_input
             size_hint_y: None
+            hint_text: "e.g. 'bitcoin'"
+            multiline: False
             height: 50
             font_size: 30
         Label:
@@ -450,9 +453,10 @@
             text_size: self.size
             halign: 'left'
         TextInput:
-            id: new_crypto_in_2
-#            text: f'{app.input_text}'
+            id: new_crypto_symbol_input
             size_hint_y: None
+            hint_text: "e.g. 'btc'"
+            multiline: False
             height: 50
             font_size: 30
         Label:
@@ -461,16 +465,18 @@
             text_size: self.size
             halign: 'left'
         TextInput:
-            id: new_crypto_in_3
-#            text: f'{app.input_text}'
+            id: new_crypto_price_input
             size_hint_y: None
             height: 50
+            multiline: False
+            hint_text: "e.g. 51863.04"
+            input_filter: 'float'
             font_size: 30
         Label:
             id: new_crypto_message
             text: ""
             color: ((50/256), (222/256), (153/256), 1.0)
-            font_size: 50
+            font_size: 28
         GridLayout:
             cols: 2
             rows: 1
@@ -486,13 +492,12 @@
                 on_press:
                     root.manager.transition.direction = 'right'
                     root.manager.current = 'MainScreen'
-#                    app.go_to_home(new_crypto_message)
             Button:
                 text: "SUBMIT"
                 font_size: 80
                 font_name: 'Roboto-Bold'
                 on_press:
-                    app.submit_data(new_crypto_message, new_crypto_in_1, new_crypto_in_2, new_crypto_in_3, "New Crypto Added", "Error: Invalid Data")
+                    root.submit_new_crypto()
 <NewPortfolioScreen>:
     name: "NewPortfolioScreen"
     GridLayout:

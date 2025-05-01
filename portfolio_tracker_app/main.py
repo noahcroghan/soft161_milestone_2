@@ -1,63 +1,41 @@
-# from kivy.app import App
-# from kivy.modules import inspector
-# from kivy.core.window import Window
-# from kivy.properties import NumericProperty, StringProperty
-#
-#
-# class PortfolioTrackerApp(App):
-#     crypto_price = StringProperty("")
-#     portfolio_value = StringProperty("")
-#     portfolio_value_change = StringProperty("")
-#     input_text = StringProperty("")
-#
-#     def check_value(self, input_id, message_id):
-#         if input_id.text != '':
-#             message_id.text = ""
-#             self.crypto_price = "$#.##"
-#             self.portfolio_value = "$###.##"
-#             self.portfolio_value_change = "+ ##.##%"
-#         else:
-#             self.crypto_price = ""
-#             self.portfolio_value = ""
-#             self.portfolio_value_change = ""
-#             message_id.text = "Portfolio ID is Required"
-#
-#     def go_to_home(self, message_id):
-#         self.crypto_price = ""
-#         self.portfolio_value = ""
-#         self.portfolio_value_change = ""
-#         self.input_text = " "
-#         self.input_text = ""
-#         message_id.text = ""
-#
-#     def submit_data(self, message_id, id1, id2, id3, message_pass, message_fail):
-#         if id1.text != '' and id2.text != '' and id3.text != '':
-#             message_id.text = message_pass
-#             id1.text = ""
-#             id2.text = ""
-#             id3.text = ""
-#         else:
-#            message_id.text = message_fail
-#
-#     def build(self):
-#         inspector.create_inspector(Window, self)
-#
-#
-# if __name__ == '__main__':
-#     Window.size = (420, 720)
-#     app = PortfolioTrackerApp()
-#     app.run()
 from kivy.uix.screenmanager import Screen
-from installer.database import CryptoDatabase, Cryptocurrency  # Adjust path if needed
 
+from installer.database import CryptoDatabase, Cryptocurrency
 
 
 def get_all_cryptocurrencies():
     db_session = CryptoDatabase.get_session()
     return [crypto.name for crypto in db_session.query(Cryptocurrency).all()]
 
+
 class NewCryptoScreen(Screen):
-    pass
+    def submit_new_crypto(self):
+        name = self.ids.new_crypto_name_input.text
+        symbol = self.ids.new_crypto_symbol_input.text
+        price = self.ids.new_crypto_price_input.text
+        if not name or len(name) > 50:
+            self.show_error("Name field is required and must be less than 50 characters long.")
+            return
+        if not symbol or len(symbol) > 15:
+            self.show_error("Symbol field is required and must be less than 15 characters long.")
+            return
+        try:
+            price = float(price)
+        except ValueError:
+            self.show_error("Price field is required.")
+
+        else:
+            self.show_success("Success!")
+            # TODO: Add new crypto to database
+
+    def show_error(self, message):
+        self.ids.new_crypto_message.text = message
+        self.ids.new_crypto_message.color = ((214/256), (69/256), (69/256), 1.0)
+
+    def show_success(self, message):
+        self.ids.new_crypto_message.text = message
+        self.ids.new_crypto_message.color = ((50/256), (222/256), (153/256), 1.0)
+
 
 class NewPortfolioScreen(Screen):
 
@@ -67,6 +45,7 @@ class NewPortfolioScreen(Screen):
 
     def on_enter(self):
         self.update_spinner_values()
+
 
 class CheckPortfolioScreen(Screen):
     pass
