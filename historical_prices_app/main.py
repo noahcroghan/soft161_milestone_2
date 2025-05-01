@@ -55,9 +55,10 @@ class SelectCoinScreen(Screen):
 
     def show_error(self, message):
         self.ids.select_coin_message.text = message
-        self.ids.select_coin_message.color = (1, 0, 0, 1)
+        self.ids.select_coin_message.color = ((214/256), (69/256), (69/256), 1.0)
         self.ids.select_coin_message.opacity = 1
 
+    # TODO: Make labels wrap or find some other way to make long coin names fit better
     def add_coin_to_ui(self, coin):
         box = BoxLayout(size_hint_y=None, height=dp(40), spacing=dp(10), padding=[dp(10), 0])
 
@@ -70,11 +71,11 @@ class SelectCoinScreen(Screen):
         box.add_widget(Label(text=f"${coin.current_price:,.2f}"))
 
         change_text = f"{coin.percent_change_24h:.2f}%"
-        change_color = (0, 0, 0, 1)
+        change_color = (1, 1, 1, 1)
         if coin.percent_change_24h < 0:
-            change_color = (1, 0, 0, 1)
+            change_color = ((214/256), (69/256), (69/256), 1.0)
         elif coin.percent_change_24h > 0:
-            change_color = (0, 1, 0, 1)
+            change_color = ((50/256), (222/256), (153/256), 1.0)
         box.add_widget(Label(text=change_text, color=change_color))
 
         self.ids.coin_container.add_widget(box)
@@ -204,12 +205,12 @@ class ViewHistoryScreen(Screen):
 
     def show_error(self, message):
         self.ids.history_message.text = message
-        self.ids.history_message.color = (1, 0, 0, 1)
+        self.ids.history_message.color = ((214/256), (69/256), (69/256), 1.0)
         self.ids.history_message.opacity = 1
 
     def show_success(self, message):
         self.ids.history_message.text = message
-        self.ids.history_message.color = (0, 1, 0, 1)
+        self.ids.history_message.color = ((50/256), (222/256), (153/256), 1.0)
         self.ids.history_message.opacity = 1
 
     def on_leave(self):
