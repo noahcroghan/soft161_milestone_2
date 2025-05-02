@@ -39,6 +39,7 @@ class Cryptocurrency(Persisted):
     symbol = Column(String(15), nullable=False)
     current_price = Column(Numeric(20, 8), nullable=False)
     percent_change_24h = Column(Numeric(20, 8))
+    coingecko_id = Column(String(50), nullable=False)
 
 
 class HistoricalPrice(Persisted):
