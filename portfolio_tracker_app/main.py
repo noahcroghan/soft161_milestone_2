@@ -55,7 +55,8 @@ class NewCryptoScreen(Screen):
                 return
 
             new_crypto = Cryptocurrency(name=name, symbol=symbol, current_price=price,
-                                        percent_change_24h=percent_change_24h, coingecko_id=symbol)
+                                        percent_change_24h=percent_change_24h,
+                                        coingecko_id=symbol)  # Maybe this should be `None`?
             session.add(new_crypto)
             session.commit()
 

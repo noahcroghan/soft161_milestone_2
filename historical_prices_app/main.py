@@ -55,7 +55,7 @@ class SelectCoinScreen(Screen):
 
     def show_error(self, message):
         self.ids.select_coin_message.text = message
-        self.ids.select_coin_message.color = ((214/256), (69/256), (69/256), 1.0)
+        self.ids.select_coin_message.color = ((214 / 256), (69 / 256), (69 / 256), 1.0)
         self.ids.select_coin_message.opacity = 1
 
     # TODO: Make labels wrap or find some other way to make long coin names fit better
@@ -73,9 +73,9 @@ class SelectCoinScreen(Screen):
         change_text = f"{coin.percent_change_24h:.2f}%"
         change_color = (1, 1, 1, 1)
         if coin.percent_change_24h < 0:
-            change_color = ((214/256), (69/256), (69/256), 1.0)
+            change_color = ((214 / 256), (69 / 256), (69 / 256), 1.0)
         elif coin.percent_change_24h > 0:
-            change_color = ((50/256), (222/256), (153/256), 1.0)
+            change_color = ((50 / 256), (222 / 256), (153 / 256), 1.0)
         box.add_widget(Label(text=change_text, color=change_color))
 
         self.ids.coin_container.add_widget(box)
@@ -106,6 +106,7 @@ class ViewHistoryScreen(Screen):
         self.ids.chart.source = ''
         self.ids.chart.reload()
 
+        # TODO: Make this a spinner instead of textinput
         coin_symbol = self.ids.coin_symbol_input.text.strip().upper()
         start_date_str = self.ids.start_date_input.text.strip()
         end_date_str = self.ids.end_date_input.text.strip()
@@ -131,6 +132,7 @@ class ViewHistoryScreen(Screen):
             self.show_error(f"Date range must be between 1 and {date_range}.")
             return
 
+        # TODO: Get historical prices from CoinGecko API instead of DB
         try:
             session = CryptoDatabase.get_session()
 
@@ -205,12 +207,12 @@ class ViewHistoryScreen(Screen):
 
     def show_error(self, message):
         self.ids.history_message.text = message
-        self.ids.history_message.color = ((214/256), (69/256), (69/256), 1.0)
+        self.ids.history_message.color = ((214 / 256), (69 / 256), (69 / 256), 1.0)
         self.ids.history_message.opacity = 1
 
     def show_success(self, message):
         self.ids.history_message.text = message
-        self.ids.history_message.color = ((50/256), (222/256), (153/256), 1.0)
+        self.ids.history_message.color = ((50 / 256), (222 / 256), (153 / 256), 1.0)
         self.ids.history_message.opacity = 1
 
     def on_leave(self):
