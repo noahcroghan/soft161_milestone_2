@@ -13,7 +13,8 @@ def add_starter_data(session):
     for coin_details in coins_list:
         session.add(Cryptocurrency(name=coin_details['name'], symbol=coin_details['symbol'].upper(),
                                    current_price=coin_details['current_price'],
-                                   percent_change_24h=coin_details['price_change_percentage_24h']))
+                                   percent_change_24h=coin_details['price_change_percentage_24h'],
+                                   coingecko_id=coin_details['id']))
 
     session.add_all([User(user_name='Ben'), User(user_name='Jake'), User(user_name='Chan')])
 

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 import mplfinance as mpf
 import pandas as pd
@@ -9,9 +9,10 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from matplotlib import pyplot as plt
+from pycoingecko import CoinGeckoAPI
 from sqlalchemy.exc import SQLAlchemyError, ProgrammingError
 
-from installer.database import CryptoDatabase, Cryptocurrency, HistoricalPrice
+from installer.database import CryptoDatabase, Cryptocurrency
 
 
 class ClickableLabel(ButtonBehavior, Label):
@@ -96,6 +97,7 @@ class SelectCoinScreen(Screen):
 class ViewHistoryScreen(Screen):
     came_from_select_coin = BooleanProperty(False)
     is_historical_data_generated = BooleanProperty(False)
+    is_processing = BooleanProperty(False) # TODO: Make it so the submit button can't be pressed while processing an API request
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -132,24 +134,50 @@ class ViewHistoryScreen(Screen):
             self.show_error(f"Date range must be between 1 and {date_range}.")
             return
 
-        # TODO: Get historical prices from CoinGecko API instead of DB
+        current_date = datetime.now()
+        days_ago = (current_date - start_date).days
+        if days_ago > 365:
+            self.show_error("Historical data queries cannot further than 365 days ago.")
+            return
+
         try:
             session = CryptoDatabase.get_session()
 
-            historical_prices = (session.query(HistoricalPrice).join(Cryptocurrency,
-                                                                     HistoricalPrice.crypto_id == Cryptocurrency.crypto_id).filter(
-                Cryptocurrency.symbol == coin_symbol, HistoricalPrice.date >= start_date,
-                HistoricalPrice.date <= end_date).order_by(HistoricalPrice.date.asc()).all())
-
-            if not historical_prices:
-                self.show_error("No historical data found for selected coin and date range.")
+            crypto = session.query(Cryptocurrency).filter(Cryptocurrency.symbol == coin_symbol).first()
+            if not crypto:
+                self.show_error(f"No coin found with symbol '{coin_symbol}'.")
                 return
 
-            date_list = [record.date for record in historical_prices]
-            open_prices = [float(record.open_price) for record in historical_prices]
-            high_prices = [float(record.high_price) for record in historical_prices]
-            low_prices = [float(record.low_price) for record in historical_prices]
-            close_prices = [float(record.close_price) for record in historical_prices]
+            coingecko = CoinGeckoAPI()
+
+            from_timestamp = int(start_date.replace(tzinfo=timezone.utc).timestamp())
+            to_timestamp = int(
+                (end_date + timedelta(days=1) - timedelta(seconds=1)).replace(tzinfo=timezone.utc).timestamp())
+
+            data = coingecko.get_coin_market_chart_range_by_id(id=crypto.coingecko_id, vs_currency='usd',
+                                                               from_timestamp=from_timestamp, to_timestamp=to_timestamp)
+            prices = data.get('prices', [])
+
+            if not prices:
+                self.show_error("No data for that window.")
+                return
+
+            df = pd.DataFrame(prices, columns=['timestamp', 'price'])
+            df['Date'] = pd.to_datetime(df['timestamp'], unit='ms')
+            df.set_index('Date', inplace=True)
+
+            ohlc = df['price'].resample('h').agg({
+                'Open': 'first',
+                'High': 'max',
+                'Low': 'min',
+                'Close': 'last'
+            }).dropna().reset_index()
+
+            date_list = [row for row in ohlc['Date']]
+            open_prices = [row for row in ohlc['Open']]
+            high_prices = [row for row in ohlc['High']]
+            low_prices = [row for row in ohlc['Low']]
+            close_prices = [row for row in ohlc['Close']]
 
             self.export_df = pd.DataFrame({
                 'Date': date_list,
@@ -167,7 +195,7 @@ class ViewHistoryScreen(Screen):
                 self.show_error("Please select a chart type.")
                 return
             elif chart_type == "Line Chart":
-                plt.plot(date_list, close_prices, marker='o', linestyle='-')
+                plt.plot(date_list, close_prices, linestyle='-')
             elif chart_type == "Bar Chart":
                 plt.bar(date_list, close_prices)
             elif chart_type == "Candlestick Chart":

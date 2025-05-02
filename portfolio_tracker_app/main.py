@@ -55,8 +55,9 @@ class NewCryptoScreen(Screen):
                 return
 
             new_crypto = Cryptocurrency(name=name, symbol=symbol, current_price=price,
-                                        percent_change_24h=percent_change_24h,
-                                        coingecko_id=symbol)  # Maybe this should be `None`?
+                                        percent_change_24h=percent_change_24h, coingecko_id=symbol)
+            # TODO: Maybe the symbol should have some kind of indication that it is not a CoinGecko coin
+            #  Currently, it's not nullable
             session.add(new_crypto)
             session.commit()
 
