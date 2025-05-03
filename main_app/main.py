@@ -16,8 +16,10 @@ class LoginScreen(Screen):
 
     def update_spinner_values(self):
         db = CryptoDatabase(CryptoDatabase.construct_mysql_url())
-        usernames = db.get_all_usernames()
+        session = db.create_session()
+        usernames = db.get_all_usernames(session)
         self.ids.existing_users_spinner.values = usernames
+        session.close()
 
     def on_enter(self):
         self.update_spinner_values()
@@ -32,7 +34,9 @@ class LoginScreen(Screen):
             return
         try:
             db = CryptoDatabase(CryptoDatabase.construct_mysql_url())
-            added_username = db.create_user(new_username)
+            session= db.create_session()
+            added_username = db.create_user(new_username,session)
+            session.close()
 
             if added_username:
                 if target_screen:
@@ -82,7 +86,9 @@ class MainScreen(Screen):
 class SwitchUserScreen(Screen):
     def update_spinner(self):
         db = CryptoDatabase(CryptoDatabase.construct_mysql_url())
-        usernames = db.get_all_usernames()
+        session = db.create_session()
+        usernames = db.get_all_usernames(session)
+        session.close()
         self.ids.existing_users_spinner.values = usernames
 
         current_user = App.get_running_app().current_user

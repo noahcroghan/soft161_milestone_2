@@ -81,11 +81,10 @@ class CryptoDatabase(object):
     def create_session(self):
         return self.Session()
 
-    def create_user(self, new_username):
+    def create_user(self, new_username,session):
         if not new_username:
             return None
 
-        session = self.create_session()
         existing_user = session.query(User).filter(User.user_name == new_username).first()
         if existing_user:
             return None
@@ -94,8 +93,7 @@ class CryptoDatabase(object):
         session.commit()
         return user.user_name
 
-    @staticmethod
-    def get_all_usernames():
-        session = CryptoDatabase.get_session()
+
+    def get_all_usernames(self,session):
         users = session.query(User).all()
         return [user.user_name for user in users]
