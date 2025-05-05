@@ -7,7 +7,13 @@
 
 # Completeness
 
-[//]: # (TODO: The status of the apps in terms of completeness and correctness &#40;list any known issues or bugs&#41;)
+- The API is known to sometimes be slow when fetching OHLC data.
+  This causes the app to occasionally stall or crash on
+  the View History Screen.
+  If you are trying to get data for the full 90-day range or press submit multiple times,
+  expect the app to stall.
+  A solution could not be found.
+- No other known bugs at this time.
 
 # Instructions
 
