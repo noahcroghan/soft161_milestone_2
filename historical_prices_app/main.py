@@ -18,7 +18,6 @@ from installer.database import CryptoDatabase, Cryptocurrency
 class ClickableLabel(ButtonBehavior, Label):
     pass  # behavior defined elsewhere
 
-
 class SelectCoinScreen(Screen):
     def on_enter(self):
         search_text = self.ids.search_input.text.strip()
@@ -84,7 +83,7 @@ class SelectCoinScreen(Screen):
     def go_to_history_from_label(self, instance):
         coin = instance.coin
         history_screen = self.manager.get_screen('ViewHistoryScreen')
-        history_screen.ids.coin_symbol_input.text = coin.symbol
+        history_screen.ids.coin_symbol_spinner.text = coin.symbol
         history_screen.came_from_select_coin = True
         self.manager.current = 'ViewHistoryScreen'
         self.manager.transition.direction = 'left'
@@ -97,7 +96,15 @@ class SelectCoinScreen(Screen):
 class ViewHistoryScreen(Screen):
     came_from_select_coin = BooleanProperty(False)
     is_historical_data_generated = BooleanProperty(False)
-    is_processing = BooleanProperty(False) # TODO: Make it so the submit button can't be pressed while processing an API request
+
+    def on_enter(self):
+        try:
+            session = CryptoDatabase.get_session()
+            cryptocurrencies = [crypto.symbol for crypto in session.query(Cryptocurrency).all()]
+            self.ids.coin_symbol_spinner.values = cryptocurrencies
+
+        except Exception as exception:
+            self.show_error(f'General error occurred:\n{exception}')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -108,13 +115,12 @@ class ViewHistoryScreen(Screen):
         self.ids.chart.source = ''
         self.ids.chart.reload()
 
-        # TODO: Make this a spinner instead of textinput
-        coin_symbol = self.ids.coin_symbol_input.text.strip().upper()
+        coin_symbol = self.ids.coin_symbol_spinner.text
         start_date_str = self.ids.start_date_input.text.strip()
         end_date_str = self.ids.end_date_input.text.strip()
 
         if not coin_symbol:
-            self.show_error("Please enter a coin symbol (i.e. BTC).")
+            self.show_error("Please select a coin symbol (i.e. BTC).")
             return
 
         try:
@@ -166,7 +172,7 @@ class ViewHistoryScreen(Screen):
             df['Date'] = pd.to_datetime(df['timestamp'], unit='ms')
             df.set_index('Date', inplace=True)
 
-            ohlc = df['price'].resample('h').agg({
+            ohlc = df['price'].resample('D').agg({
                 'Open': 'first',
                 'High': 'max',
                 'Low': 'min',
@@ -244,7 +250,7 @@ class ViewHistoryScreen(Screen):
         self.ids.history_message.opacity = 1
 
     def on_leave(self):
-        self.ids.coin_symbol_input.text = ''
+        self.ids.coin_symbol_spinner.text = 'Select Coin'
         self.ids.start_date_input.text = ''
         self.ids.end_date_input.text = ''
         self.ids.history_message.text = ''
