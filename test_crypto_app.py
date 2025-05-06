@@ -1,6 +1,5 @@
 from unittest import TestCase
 
-from historical_prices_app.remove_me.config import username
 from installer.database import CryptoDatabase, Persisted, User
 
 
