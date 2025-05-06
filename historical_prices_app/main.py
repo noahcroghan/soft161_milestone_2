@@ -2,6 +2,7 @@ from datetime import datetime, timezone, timedelta
 
 import mplfinance as mpf
 import pandas as pd
+from kivy.clock import Clock
 from kivy.metrics import dp
 from kivy.properties import BooleanProperty
 from kivy.uix.behaviors import ButtonBehavior
@@ -113,42 +114,51 @@ class ViewHistoryScreen(Screen):
         self.export_df = None
 
     def submit_history(self):
-        self.ids.history_message.text = ''
-        self.ids.chart.source = ''
-        self.ids.chart.reload()
+        self.ids.view_history_submit_button.disabled = True
+        Clock.schedule_once(lambda dt: self.process_submission())  # Try to block the API request (doesn't always work)
 
-        coin_name = self.ids.coin_name_spinner.text
-        start_date_str = self.ids.start_date_input.text.strip()
-        end_date_str = self.ids.end_date_input.text.strip()
-
-        if not coin_name:
-            self.show_error("Please select a coin symbol (i.e. BTC).")
-            return
-
+    def process_submission(self):
         try:
-            start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
-            end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
-        except ValueError:
-            self.show_error("Invalid date format. Use YYYY-MM-DD.")
-            return
+            self.ids.history_message.text = ''
+            self.ids.chart.source = ''
+            self.ids.chart.reload()
 
-        if start_date > end_date:
-            self.show_error("Start date must be before or equal to end date.")
-            return
+            coin_name = self.ids.coin_name_spinner.text
+            if coin_name == 'Select Coin':
+                self.show_error("Please select a coin (i.e. Bitcoin).")
+                return
 
-        date_range = 90
-        days_difference = (end_date - start_date).days
-        if days_difference < 1 or days_difference > date_range:
-            self.show_error(f"Date range must be between 1 and {date_range}.")
-            return
+            start_date_str = self.ids.start_date_input.text.strip()
+            end_date_str = self.ids.end_date_input.text.strip()
 
-        current_date = datetime.now()
-        days_ago = (current_date - start_date).days
-        if days_ago > 365:
-            self.show_error("Historical data queries cannot further than 365 days ago.")
-            return
+            try:
+                start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+                end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
+            except ValueError:
+                self.show_error("Invalid date format. Use YYYY-MM-DD.")
+                return
 
-        try:
+            if start_date > end_date:
+                self.show_error("Start date must be before or equal to end date.")
+                return
+
+            date_range = 90
+            days_difference = (end_date - start_date).days
+            if days_difference < 1 or days_difference > date_range:
+                self.show_error(f"Date range must be between 1 and {date_range}.")
+                return
+
+            current_date = datetime.now()
+            days_ago = (current_date - start_date).days
+            if days_ago > 365:
+                self.show_error("Historical data queries cannot further than 365 days ago.")
+                return
+
+            chart_type = self.ids.historical_price_chart_spinner.text
+            if chart_type == "Select Chart Type":
+                self.show_error("Please select a chart type.")
+                return
+
             session = CryptoDatabase.get_session()
 
             crypto = session.query(Cryptocurrency).filter(Cryptocurrency.name == coin_name).first()
@@ -186,14 +196,9 @@ class ViewHistoryScreen(Screen):
             self.export_df = pd.DataFrame(
                 {'Date': date_list, 'Open': open_prices, 'High': high_prices, 'Low': low_prices, 'Close': close_prices})
 
-            chart_type = self.ids.historical_price_chart_spinner.text
-
             plt.figure(figsize=(6, 4))
 
-            if chart_type == "Select Chart Type":
-                self.show_error("Please select a chart type.")
-                return
-            elif chart_type == "Line Chart":
+            if chart_type == "Line Chart":
                 plt.plot(date_list, close_prices, linestyle='-')
             elif chart_type == "Bar Chart":
                 plt.bar(date_list, close_prices)
@@ -224,6 +229,8 @@ class ViewHistoryScreen(Screen):
             self.is_historical_data_generated = True
         except Exception as exception:
             self.show_error(f'General error occurred:\n{exception}')
+        finally:
+            self.ids.view_history_submit_button.disabled = False
 
     def export_to_csv(self):
         try:
