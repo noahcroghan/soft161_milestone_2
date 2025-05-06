@@ -39,3 +39,4 @@ password = ""  # Enter password between quotes
         - `USE crypto;` (Will select the database)
         - `SELECT * FROM cryptocurrencies;` (Will get all cryptocurrency coins in the database)
 10. Run the main application from the root directory with `python -m main_app.main` in a terminal or from your IDE.
+    (or use `python3` if necessary)
