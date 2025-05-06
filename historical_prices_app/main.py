@@ -18,6 +18,8 @@ from installer.database import CryptoDatabase, Cryptocurrency
 class ClickableLabel(ButtonBehavior, Label):
     pass  # behavior defined elsewhere
 
+
+# TODO: Make this screen get from the API instead of DB
 class SelectCoinScreen(Screen):
     def on_enter(self):
         search_text = self.ids.search_input.text.strip()
@@ -58,11 +60,11 @@ class SelectCoinScreen(Screen):
         self.ids.select_coin_message.color = ((214 / 256), (69 / 256), (69 / 256), 1.0)
         self.ids.select_coin_message.opacity = 1
 
-    # TODO: Make labels wrap or find some other way to make long coin names fit better
     def add_coin_to_ui(self, coin):
-        box = BoxLayout(size_hint_y=None, height=dp(40), spacing=dp(10), padding=[dp(10), 0])
+        box = BoxLayout(size_hint_y=None, height=dp(60), spacing=dp(10), padding=dp(10))
 
-        coin_label = ClickableLabel(text=f"{coin.name} [i]({coin.symbol})[/i]", markup=True)
+        coin_label = ClickableLabel(text=f"{coin.name} [i]({coin.symbol})[/i]", markup=True, text_size=(dp(115), None),
+                                    shorten=False, halign="center", valign="middle")
         coin_label.coin = coin
         coin_label.bind(on_press=self.go_to_history_from_label)
 
@@ -172,12 +174,8 @@ class ViewHistoryScreen(Screen):
             df['Date'] = pd.to_datetime(df['timestamp'], unit='ms')
             df.set_index('Date', inplace=True)
 
-            ohlc = df['price'].resample('D').agg({
-                'Open': 'first',
-                'High': 'max',
-                'Low': 'min',
-                'Close': 'last'
-            }).dropna().reset_index()
+            ohlc = df['price'].resample('D').agg(
+                {'Open': 'first', 'High': 'max', 'Low': 'min', 'Close': 'last'}).dropna().reset_index()
 
             date_list = [row for row in ohlc['Date']]
             open_prices = [row for row in ohlc['Open']]
@@ -185,13 +183,8 @@ class ViewHistoryScreen(Screen):
             low_prices = [row for row in ohlc['Low']]
             close_prices = [row for row in ohlc['Close']]
 
-            self.export_df = pd.DataFrame({
-                'Date': date_list,
-                'Open': open_prices,
-                'High': high_prices,
-                'Low': low_prices,
-                'Close': close_prices
-            })
+            self.export_df = pd.DataFrame(
+                {'Date': date_list, 'Open': open_prices, 'High': high_prices, 'Low': low_prices, 'Close': close_prices})
 
             chart_type = self.ids.historical_price_chart_spinner.text
 
