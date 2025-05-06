@@ -83,7 +83,7 @@ class SelectCoinScreen(Screen):
     def go_to_history_from_label(self, instance):
         coin = instance.coin
         history_screen = self.manager.get_screen('ViewHistoryScreen')
-        history_screen.ids.coin_symbol_spinner.text = coin.symbol
+        history_screen.ids.coin_name_spinner.text = coin.name
         history_screen.came_from_select_coin = True
         self.manager.current = 'ViewHistoryScreen'
         self.manager.transition.direction = 'left'
@@ -100,8 +100,8 @@ class ViewHistoryScreen(Screen):
     def on_enter(self):
         try:
             session = CryptoDatabase.get_session()
-            cryptocurrencies = [crypto.symbol for crypto in session.query(Cryptocurrency).all()]
-            self.ids.coin_symbol_spinner.values = cryptocurrencies
+            cryptocurrencies = [crypto.name for crypto in session.query(Cryptocurrency).all()]
+            self.ids.coin_name_spinner.values = cryptocurrencies
 
         except Exception as exception:
             self.show_error(f'General error occurred:\n{exception}')
@@ -115,11 +115,11 @@ class ViewHistoryScreen(Screen):
         self.ids.chart.source = ''
         self.ids.chart.reload()
 
-        coin_symbol = self.ids.coin_symbol_spinner.text
+        coin_name = self.ids.coin_name_spinner.text
         start_date_str = self.ids.start_date_input.text.strip()
         end_date_str = self.ids.end_date_input.text.strip()
 
-        if not coin_symbol:
+        if not coin_name:
             self.show_error("Please select a coin symbol (i.e. BTC).")
             return
 
@@ -149,9 +149,9 @@ class ViewHistoryScreen(Screen):
         try:
             session = CryptoDatabase.get_session()
 
-            crypto = session.query(Cryptocurrency).filter(Cryptocurrency.symbol == coin_symbol).first()
+            crypto = session.query(Cryptocurrency).filter(Cryptocurrency.name == coin_name).first()
             if not crypto:
-                self.show_error(f"No coin found with symbol '{coin_symbol}'.")
+                self.show_error(f"No coin found with symbol '{coin_name}'.")
                 return
 
             coingecko = CoinGeckoAPI()
@@ -217,7 +217,7 @@ class ViewHistoryScreen(Screen):
 
             plt.xlabel("Date")
             plt.ylabel("Price (USD)")
-            plt.title(f"{coin_symbol} Price History")
+            plt.title(f"{coin_name} Price History")
             plt.xticks(rotation=45)
             plt.tight_layout()
 
@@ -250,7 +250,7 @@ class ViewHistoryScreen(Screen):
         self.ids.history_message.opacity = 1
 
     def on_leave(self):
-        self.ids.coin_symbol_spinner.text = 'Select Coin'
+        self.ids.coin_name_spinner.text = 'Select Coin'
         self.ids.start_date_input.text = ''
         self.ids.end_date_input.text = ''
         self.ids.history_message.text = ''
