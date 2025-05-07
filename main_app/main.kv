@@ -590,35 +590,44 @@
     name: "CheckPortfolioScreen"
     GridLayout:
         cols: 1
-        rows: 13
+        rows: 14
         padding: 20
         spacing: 10
         Label:
-            text: 'Check Portfolio Value'
+            text: 'Check Portfolio'
             font_size: 50
             font_name: 'Roboto-Bold'
         Label:
             text: ""
-        Label:
-            text: "Portfolio ID"
-            font_size: 35
-            text_size: self.size
-            halign: 'left'
-        TextInput:
-            id: check_value_in
-#            text: f'{app.input_text}'
+        Button:
+            id: check_total_portfolio
+            text: 'View Portfolio Summary'
+            size_hint_y: None
+            height: 50
+            font_size: 30
+            on_press: app.root.get_screen('CheckPortfolioScreen').view_portfolio_summary()
+        Button:
+            id: check_portfolio_pie
+            text: 'View Portfolio Pie Chart'
+            size_hint_y: None
+            height: 50
+            font_size: 30
+        Spinner:
+            id: check_portfolio_ids
+            text: 'Select Specific Entry'
+            values: []
             size_hint_y: None
             height: 50
             font_size: 30
         Label:
             text: ""
         Label:
-            text: "Crypto Current Price:"
+            text: "Investment Amount:"
             font_size: 35
             text_size: self.size
             halign: 'left'
         Label:
-#            text: f'{app.crypto_price}'
+            id: check_investment_amount
             color: ((50/256), (222/256), (153/256), 1.0)
             font_size: 35
             text_size: self.size
@@ -629,7 +638,7 @@
             text_size: self.size
             halign: 'left'
         Label:
-#            text: f'{app.portfolio_value}'
+            id: check_portfolio_value
             color: ((50/256), (222/256), (153/256), 1.0)
             font_size: 35
             text_size: self.size
@@ -640,7 +649,7 @@
             text_size: self.size
             halign: 'left'
         Label:
-#            text: f'{app.portfolio_value_change}'
+            id: check_value_change
             color: ((50/256), (222/256), (153/256), 1.0)
             font_size: 35
             text_size: self.size
@@ -650,27 +659,17 @@
             text: ""
             color: ((50/256), (222/256), (153/256), 1.0)
             font_size: 45
-        GridLayout:
-            cols: 2
-            rows: 1
-            spacing: 10
+        Button:
+            text: "HOME"
             size_hint_y: None
-            height: 140
-            Button:
-                text: "HOME"
-                size_hint_x: None
-                width: 140
-                font_size: 40
-                font_name: 'Roboto-Bold'
-                on_press:
-                    root.manager.transition.direction = 'right'
-                    root.manager.current = 'MainScreen'
+            height: 50
+            font_size: 30
+            font_name: 'Roboto-Bold'
+            on_press:
+                root.manager.transition.direction = 'right'
+                root.manager.current = 'MainScreen'
+                app.root.get_screen('CheckPortfolioScreen').go_home()
 #                    app.go_to_home(check_portfolio_message)
-            Button:
-                on_press: app.check_value(check_value_in, check_portfolio_message)
-                text: "CHECK"
-                font_size: 80
-                font_name: 'Roboto-Bold'
 
 
 <Screen>:

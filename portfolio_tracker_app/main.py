@@ -59,6 +59,14 @@ def get_all_cryptocurrencies():
     db_session = CryptoDatabase.get_session()
     return [crypto.name for crypto in db_session.query(Cryptocurrency).all()]
 
+def get_all_portfolios():
+    db_session = CryptoDatabase.get_session()
+    int_list = [portfolios.portfolio_id for portfolios in db_session.query(Portfolio).all()]
+    str_list = []
+    for portfolio_id in int_list:
+        str_list.append(str(portfolio_id))
+    return str_list
+
 class NewCryptoScreen(Screen):
     pass
 
@@ -82,7 +90,7 @@ class NewPortfolioScreen(Screen):
         self.ids.new_portfolio_message.text = ""
         self.ids.new_portfolio_message.color = ((50/256), (222/256), (153/256), 1.0)
         self.ids.new_portfolio_message.font_size = 50
-        self.ids.new_portfolio_crypto.text = ""
+        self.ids.new_portfolio_crypto.text = "Crypto Name"
         self.ids.new_portfolio_quantity.text = ""
         self.ids.new_portfolio_date.text = ""
 
@@ -148,4 +156,116 @@ class NewPortfolioScreen(Screen):
         self.show_message("Submitted", 50)
 
 class CheckPortfolioScreen(Screen):
-    pass
+    def update_spinner_values(self):
+        portfolios = get_all_portfolios()
+        self.ids.check_portfolio_ids.values = portfolios
+
+    def show_error(self, message, font_size):
+        self.ids.check_portfolio_message.text = message
+        self.ids.check_portfolio_message.color = (1, 0, 0, 1)
+        self.ids.check_portfolio_message.font_size = font_size
+
+    def show_message(self, message, font_size):
+        self.ids.check_portfolio_message.text = message
+        self.ids.check_portfolio_message.color = ((50/256), (222/256), (153/256), 1.0)
+        self.ids.check_portfolio_message.font_size = font_size
+
+    def go_home(self):
+        self.ids.check_portfolio_message.text = ""
+        self.ids.check_portfolio_message.color = ((50/256), (222/256), (153/256), 1.0)
+        self.ids.check_portfolio_message.font_size = 50
+        self.ids.check_portfolio_ids.text = "Portfolio ID"
+        self.ids.check_investment_amount.text = ""
+        self.ids.check_portfolio_value.text = ""
+        self.ids.check_value_change.text = ""
+
+    def on_enter(self):
+        self.update_spinner_values()
+
+    def initial_investment(self):
+        self.show_message("Calculating Initial Investment Amount...", 25)
+        db_session = CryptoDatabase.get_session()
+        portfolios = get_all_portfolios()
+        initial_investment = float(0.0)
+
+        for portfolio in portfolios:
+            portfolio = int(portfolio)
+            portfolio_investment = [portfolios.initial_investment_amount for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == portfolio]
+            if len(portfolio_investment) != 1:
+                self.show_error("Invalid portfolio selected", 30)
+            else:
+                portfolio_investment = portfolio_investment[0]
+            initial_investment += float(portfolio_investment)
+            print
+            print(portfolio_investment)
+            print(initial_investment)
+
+        return initial_investment
+
+    def current_total_value(self):
+        self.show_message("Calculating Current Total Value...", 25)
+        db_session = CryptoDatabase.get_session()
+        portfolios = get_all_portfolios()
+        current_total = float(0.0)
+
+        for portfolio in portfolios:
+            # portfolio_id = [portfolios.id for portfolios in db_session.query(Portfolio).all() if portfolio.portfolio_id == portfolio]
+            # if portfolio_id != 1:
+            #     self.show_error("Invalid portfolio selected", 30)
+            # else:
+            #     portfolio_id = portfolio_id[0]
+            portfolio = int(portfolio)
+            selected_crypto_id = [portfolios.crypto_id for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == portfolio]
+
+            if len(selected_crypto_id) != 1:
+                self.show_error("Invalid cryptocurrency selected", 25)
+                return
+            else:
+                selected_crypto_id = selected_crypto_id[0]
+
+            selected_crypto_name = [crypto.name for crypto in db_session.query(Cryptocurrency).all() if crypto.crypto_id == selected_crypto_id]
+            selected_coin_gecko_id = [crypto.coingecko_id for crypto in db_session.query(Cryptocurrency).all() if crypto.crypto_id == selected_crypto_id]
+
+            if len(selected_crypto_name) != 1 or len(selected_coin_gecko_id) != 1:
+                self.show_error("Invalid coingecko cryptocurrency selected", 25)
+                return
+            else:
+                selected_crypto_name = selected_crypto_name[0]
+                selected_coin_gecko_id = selected_coin_gecko_id[0]
+
+            current_price = coin_gecko_api.get_price(selected_coin_gecko_id, vs_currencies="usd")
+            print(current_price)
+            print(selected_coin_gecko_id)
+            print(current_price[selected_coin_gecko_id]["usd"])
+
+            coin_quantity = [portfolios.coin_amount for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == portfolio]
+
+            if len(coin_quantity) != 1:
+                self.show_error("Invalid cryptocurrency selected", 25)
+                return
+            else:
+                coin_quantity = coin_quantity[0]
+
+            current_total += (current_price[selected_coin_gecko_id]["usd"] * float(coin_quantity))
+            print(current_total)
+
+        return current_total
+
+    def view_portfolio_summary(self):
+        db_session = CryptoDatabase.get_session()
+        initial_investment = self.initial_investment()
+        print(initial_investment)
+        current_total_value = self.current_total_value()
+        self.show_message("", 30)
+        print(current_total_value)
+
+        value_change = ((current_total_value - initial_investment) / initial_investment)*100
+        if value_change < 0:
+            self.ids.check_value_change.color = (1, 0, 0, 1)
+        else:
+            self.ids.check_value_change.color = ((50/256), (222/256), (153/256), 1.0)
+
+        self.ids.check_investment_amount.text = "$" + str(initial_investment)
+        self.ids.check_portfolio_value.text = "$" + str(current_total_value)
+        self.ids.check_value_change.text = str(value_change) + "%"
+        self.show_message("Complete", 30)
