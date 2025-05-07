@@ -63,19 +63,6 @@ class CryptoDatabase(object):
         self.Session = sessionmaker(bind=self.engine)
 
     def ensure_tables_exist(self):
-        # --- BEGIN: Drop and recreate the database for testing only ---
-        print('Dropping and recreating database.')
-        from sqlalchemy import text
-        password_encoded = quote_plus(password)
-        temp_engine = create_engine(f'mysql+mysqlconnector://{username}:{password_encoded}@localhost:{port}',
-                                    isolation_level="AUTOCOMMIT")
-        with temp_engine.connect() as conn:
-            conn.execute(text("DROP DATABASE IF EXISTS crypto"))
-            conn.execute(text("CREATE DATABASE crypto"))
-        self.engine = create_engine(self.construct_mysql_url())
-        self.Session = sessionmaker(bind=self.engine)
-        # --- END: Drop and recreate the database for testing only ---
-
         Persisted.metadata.create_all(self.engine)
 
     def create_session(self):
