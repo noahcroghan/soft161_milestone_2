@@ -49,6 +49,8 @@ class SelectCoinScreen(Screen):
 
         except ValueError:
             self.show_error('No coins found matching search criteria')
+        except AttributeError:
+            self.show_error("Missing data. Please run the installer per the README instructions.")
         except ProgrammingError:
             self.show_error('Database not initialized. Run installer first!')
         except SQLAlchemyError as sql_alchemy_error:
