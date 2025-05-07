@@ -6,7 +6,21 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from installer.database import CryptoDatabase, User, Cryptocurrency, Portfolio  # Adjust path if needed
 from installer.database_installer import coin_gecko_api
-
+@staticmethod
+def add_crypto_to_database(session,name,symbol,price,percent_change_24h):
+    crypto_exists = session.query(Cryptocurrency).filter(
+        (Cryptocurrency.symbol==symbol)|(Cryptocurrency.name==name)).first()
+    if crypto_exists:
+        return False
+    new_crypto = Cryptocurrency(name=name,
+                                symbol=symbol,
+                                current_price=price,
+                                percent_change_24h=percent_change_24h,
+                                coingecko_id=symbol
+                                )
+    session.add(new_crypto)
+    session.commit()
+    return True
 
 def get_all_cryptocurrencies():
     db_session = CryptoDatabase.get_session()
@@ -19,6 +33,8 @@ def get_all_portfolios():
     for portfolio_id in int_list:
         str_list.append(str(portfolio_id))
     return str_list
+
+
 
 class NewCryptoScreen(Screen):
     def submit_new_crypto(self):
@@ -58,19 +74,7 @@ class NewCryptoScreen(Screen):
 
         try:
             session = CryptoDatabase.get_session()
-            crypto_exists = session.query(Cryptocurrency).filter(
-                (Cryptocurrency.symbol == symbol) | (Cryptocurrency.name == name)).first()
-
-            if crypto_exists:
-                self.show_error("Submitted crypto already exists.")
-                return
-
-            new_crypto = Cryptocurrency(name=name, symbol=symbol, current_price=price,
-                                        percent_change_24h=percent_change_24h, coingecko_id=symbol)
-            # TODO: Maybe the symbol should have some kind of indication that it is not a CoinGecko coin
-            #  Currently, it's not nullable
-            session.add(new_crypto)
-            session.commit()
+            add_crypto_to_database(session,name,symbol,price,percent_change_24h)
 
             self.show_success(f"New crypto '{name}' [i]({symbol})[/i] added successfully.")
         except SQLAlchemyError as sql_alchemy_error:
