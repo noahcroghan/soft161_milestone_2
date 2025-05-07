@@ -541,7 +541,7 @@
             text_size: self.size
             halign: 'left'
         TextInput:
-            id: new_portfolio_in_2
+            id: new_portfolio_quantity
 #            text: f'{app.input_text}'
             size_hint_y: None
             height: 50
@@ -552,8 +552,8 @@
             text_size: self.size
             halign: 'left'
         TextInput:
-            id: new_portfolio_in_3
-#            text: f'{app.input_text}'
+            id: new_portfolio_date
+            hint_text: 'YYYY-MM-DD'
             size_hint_y: None
             height: 50
             font_size: 30
@@ -577,13 +577,15 @@
                 on_press:
                     root.manager.transition.direction = 'right'
                     root.manager.current = 'MainScreen'
+                    app.root.get_screen('NewPortfolioScreen').go_home()
 #                    app.go_to_home(new_portfolio_message)
             Button:
                 text: "SUBMIT"
                 font_size: 80
                 font_name: 'Roboto-Bold'
-                on_press:
-                    app.submit_data(new_portfolio_message, new_portfolio_in_1, new_portfolio_in_2, new_portfolio_in_3, "New Portfolio Added", "Error: Invalid Data")
+                on_press: app.root.get_screen('NewPortfolioScreen').create_new_portfolio()
+#                on_press:
+#                    app.submit_data(new_portfolio_message, new_portfolio_in_1, new_portfolio_in_2, new_portfolio_in_3, "New Portfolio Added", "Error: Invalid Data")
 <CheckPortfolioScreen>:
     name: "CheckPortfolioScreen"
     GridLayout:
