@@ -1,4 +1,5 @@
 import webbrowser
+from sys import stderr
 
 from kivy.app import App
 from kivy.core.window import Window
@@ -144,5 +145,5 @@ if __name__ == '__main__':
     try:
         MainApp().run()
     except ProgrammingError:
-        print('Database connection failed! Make sure to follow the instructions in the README.')
+        print('Database connection failed! Make sure to follow the instructions in the README.', file=stderr)
         exit(1)
