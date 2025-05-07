@@ -227,6 +227,8 @@ class ViewHistoryScreen(Screen):
             self.ids.chart.reload()
             self.show_success("Price history loaded successfully.")
             self.is_historical_data_generated = True
+        except ValueError:
+            self.show_error(f"Error with CoinGecko API. Does the coin exist?")
         except Exception as exception:
             self.show_error(f'General error occurred:\n{exception}')
         finally:
