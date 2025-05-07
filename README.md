@@ -17,12 +17,14 @@
 
 # Instructions
 
-1. Clone the repository with Git
+1. Install Git and then clone the repository.
+    - Set up your [personal access token](https://docs.gitlab.com/user/profile/personal_access_tokens/) if you haven't
+      already.
 2. Change into the cloned directory i.e. `cd soft161_milestone_2` or import the directory into your IDE
-3. Install Python 3.12
-4. Install PIP package dependencies `pycoingecko`, `mplfinance`, `matplotlib`, `sqlalchemy`, and `kivy`
-5. Install MySQL Server Community Edition
-6. Make a file in the project ***root directory*** called `config.py` with the following contents
+3. Install Python 3.12.
+4. Install PIP package dependencies `pycoingecko`, `mplfinance`, `matplotlib`, `sqlalchemy`, and `kivy`.
+5. Install MySQL Server Community Edition.
+6. Make a file in the project ***root directory*** called `config.py` with the following contents:
 
 ```python
 username = 'root'  # Change username if applicable
@@ -30,11 +32,11 @@ port = 3306  # Change port if applicable
 password = ""  # Enter MySQL server password between quotes or leave blank
 ```
 
-7. Enter a MySQL shell, typically by running `mysql` from a terminal
-8. In the MySQL shell, run the following commands (only need to run these on the first installation)
+7. Enter a MySQL shell, typically by running `mysql` from a terminal.
+8. In the MySQL shell, run the following commands (only need to run these on the first installation).
     - `DROP DATABASE IF EXISTS crypto;`
     - `CREATE DATABASE crypto;`
-9. Run `installer/database_installer.py`
+9. Run `installer/database_installer.py`.
     - This will populate the database. You can verify it worked with the following commands:
         - `USE crypto;` (Will select the database)
         - `SELECT * FROM cryptocurrencies;` (Will get all cryptocurrency coins in the database)
