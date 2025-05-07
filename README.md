@@ -33,9 +33,11 @@ File Structure
 3. Change into the cloned directory with `cd soft161_milestone_2` or import the directory into your IDE
 4. Install and use [Python 3.12](https://www.python.org/downloads/), do so in
    a [virtual environment](https://wiki.archlinux.org/title/Python/Virtual_environment) if necessary.
+    - Newer or older versions of Python are not guaranteed to work
 5. Install package dependencies with `pip install pycoingecko mplfinance matplotlib sqlalchemy kivy`
     - You can alternatively install these in your IDE
-6. Make a file in the project **root directory** called `config.py` with the following contents:
+6. Install [MySQL Server Community Edition](https://dev.mysql.com/downloads/mysql/).
+7. Make a file in the project **root directory** called `config.py` with the following contents:
 
 ```python
 username = 'root'  # Change username if applicable
@@ -43,7 +45,6 @@ port = 3306  # Change port if applicable
 password = ""  # Enter MySQL server password between quotes or leave blank
 ```
 
-7. Install MySQL Server Community Edition.
 8. Enter a MySQL shell, typically by running `mysql` from a terminal.
     - If the command isn't found, ensure MySQL is added to your system PATH variable or use the terminal included with
       your MySQL installation
