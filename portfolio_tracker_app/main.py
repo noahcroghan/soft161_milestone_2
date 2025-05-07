@@ -200,8 +200,23 @@ class NewPortfolioScreen(Screen):
 
 class CheckPortfolioScreen(Screen):
     def update_spinner_values(self):
+        db_session = CryptoDatabase.get_session()
         portfolios = get_all_portfolios()
-        self.ids.check_portfolio_ids.values = portfolios
+        user_entries = []
+        selected_user = self.get_user(db_session)
+        for portfolio in portfolios:
+            portfolio = int(portfolio)
+            portfolio_user = [portfolios.user_id for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == portfolio]
+
+            if len(portfolio_user) != 1:
+                self.show_error("Invalid user selected", 25)
+                return
+            else:
+                portfolio_user = portfolio_user[0]
+
+            if portfolio_user == selected_user:
+                user_entries.append(str(portfolio))
+        self.ids.check_portfolio_ids.values = user_entries
 
     def show_error(self, message, font_size):
         self.ids.check_portfolio_message.text = message
