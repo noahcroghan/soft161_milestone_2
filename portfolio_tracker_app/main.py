@@ -199,6 +199,8 @@ class NewPortfolioScreen(Screen):
         self.show_message("Submitted", 50)
 
 class CheckPortfolioScreen(Screen):
+    portfolio_displayed = False
+
     def update_spinner_values(self):
         db_session = CryptoDatabase.get_session()
         portfolios = get_all_portfolios()
@@ -255,14 +257,25 @@ class CheckPortfolioScreen(Screen):
 
         return selected_user
 
+    def view_portfolio_summary(self):
+        portfolios = get_all_portfolios()
+        self.update_investment_information(portfolios, "Portfolio Summary Displayed")
+        self.ids.reload_portfolio_button.background_color = ((13/256), (179/256), (93/256), 1.0)
+        self.portfolio_displayed = True
+
     def portfolio_id_spinner_pressed(self):
         if self.ids.check_portfolio_ids.text != "Select Specific Entry":
             self.ids.update_entry_button.background_color = ((13/256), (179/256), (93/256), 1.0)
+            portfolio_id = int(self.ids.check_portfolio_ids.text)
+            portfolio = str(portfolio_id)
+            portfolio = [portfolio]
+            self.update_investment_information(portfolio, "Portfolio Entry Displayed")
+            self.ids.reload_portfolio_button.background_color = ((151/256), (199/256), (174/256), 1.0)
+            self.portfolio_displayed = False
 
-    def initial_investment(self):
+    def initial_investment(self, portfolios):
         self.show_message("Calculating Initial Investment Amount...", 25)
         db_session = CryptoDatabase.get_session()
-        portfolios = get_all_portfolios()
         initial_investment = float(0.0)
         selected_user = self.get_user(db_session)
 
@@ -336,10 +349,9 @@ class CheckPortfolioScreen(Screen):
         else:
             return
 
-    def current_total_value(self):
+    def current_total_value(self, portfolios):
         db_session = CryptoDatabase.get_session()
         self.show_message("Calculating Current Total Value...", 25)
-        portfolios = get_all_portfolios()
         current_total = float(0.0)
         selected_user = self.get_user(db_session)
 
@@ -352,10 +364,10 @@ class CheckPortfolioScreen(Screen):
 
         return current_total
 
-    def view_portfolio_summary(self):
-        initial_investment = self.initial_investment()
+    def update_investment_information(self, portfolios, completion_message):
+        initial_investment = self.initial_investment(portfolios)
         print(initial_investment)
-        current_total_value = self.current_total_value()
+        current_total_value = self.current_total_value(portfolios)
         self.show_message("", 30)
         print(current_total_value)
 
@@ -373,8 +385,7 @@ class CheckPortfolioScreen(Screen):
         self.ids.check_investment_amount.text = "$" + str(initial_investment)
         self.ids.check_portfolio_value.text = "$" + str(current_total_value)
         self.ids.check_value_change.text = str(value_change) + "%"
-        self.show_message("Portfolio Summary Displayed", 30)
-        self.ids.reload_portfolio_button.background_color = ((13/256), (179/256), (93/256), 1.0)
+        self.show_message(completion_message, 30)
 
     def create_portfolio_chart(self):
         db_session = CryptoDatabase.get_session()
@@ -417,6 +428,6 @@ class CheckPortfolioScreen(Screen):
         self.show_message("Portfolio chart loaded successfully.", 25)
 
     def reload_portfolio(self):
-        if self.ids.check_investment_amount.text != '':
+        if self.portfolio_displayed:
             self.view_portfolio_summary()
             self.show_message("Portfolio Summary Reloaded", 30)
