@@ -30,8 +30,8 @@ def main():
         session.commit()
         print('Records created.')
     except IntegrityError:
-        print('Integrity error occurred during database setup', file=stderr)
-        print('***This is likely because you did not drop and recreate the database***', file=stderr)
+        print('Integrity error occurred during database setup.', file=stderr)
+        print('***This is likely because you did not drop and recreate the database!***', file=stderr)
         exit(1)
     except SQLAlchemyError as exception:
         print('Database setup failed!', file=stderr)
