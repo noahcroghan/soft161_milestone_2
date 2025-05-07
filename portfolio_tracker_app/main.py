@@ -222,6 +222,8 @@ class CheckPortfolioScreen(Screen):
         self.ids.check_portfolio_value.text = ""
         self.ids.check_value_change.text = ""
         self.ids.portfolio_chart.source = ''
+        self.ids.reload_portfolio_button.background_color = ((151/256), (199/256), (174/256), 1.0)
+        self.ids.update_entry_button.background_color = ((151/256), (199/256), (174/256), 1.0)
 
     def on_enter(self):
         self.update_spinner_values()
@@ -237,6 +239,10 @@ class CheckPortfolioScreen(Screen):
             selected_user = selected_user[0]
 
         return selected_user
+
+    def portfolio_id_spinner_pressed(self):
+        if self.ids.check_portfolio_ids.text != "Select Specific Entry":
+            self.ids.update_entry_button.background_color = ((13/256), (179/256), (93/256), 1.0)
 
     def initial_investment(self):
         self.show_message("Calculating Initial Investment Amount...", 25)
@@ -325,7 +331,8 @@ class CheckPortfolioScreen(Screen):
         for portfolio in portfolios:
 
             entry_value = self.check_portfolio_entry(portfolio, db_session, selected_user)
-            current_total += entry_value
+            if entry_value:
+                current_total += entry_value
             print(current_total)
 
         return current_total
@@ -351,7 +358,8 @@ class CheckPortfolioScreen(Screen):
         self.ids.check_investment_amount.text = "$" + str(initial_investment)
         self.ids.check_portfolio_value.text = "$" + str(current_total_value)
         self.ids.check_value_change.text = str(value_change) + "%"
-        self.show_message("Complete", 30)
+        self.show_message("Portfolio Summary Displayed", 30)
+        self.ids.reload_portfolio_button.background_color = ((13/256), (179/256), (93/256), 1.0)
 
     def create_portfolio_chart(self):
         db_session = CryptoDatabase.get_session()
@@ -392,3 +400,8 @@ class CheckPortfolioScreen(Screen):
         self.ids.portfolio_chart.source = chart_file
         self.ids.portfolio_chart.reload()
         self.show_message("Portfolio chart loaded successfully.", 25)
+
+    def reload_portfolio(self):
+        if self.ids.check_investment_amount.text != '':
+            self.view_portfolio_summary()
+            self.show_message("Portfolio Summary Reloaded", 30)
