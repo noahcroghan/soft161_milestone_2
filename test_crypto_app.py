@@ -1,4 +1,5 @@
 from datetime import datetime
+from tkinter.font import names
 from unittest import TestCase
 
 from requests import session
@@ -40,6 +41,25 @@ class TestCryptoApp(TestCase):
 
         inserted = self.session.query(Cryptocurrency).filter_by(symbol='CSC').one()
         self.assertEqual(inserted.name,"Capstone")
+
+    def test_add_crypto_to_database_validates_all_fields(self):
+        name = "CheckCoin"
+        symbol ="CC"
+        price = 123.12
+        percent_change_24h = 9.99
+
+        crypto=add_crypto_to_database(
+            session =self.session,
+            name=name,
+            symbol=symbol,
+            price=price,
+            percent_change_24h=percent_change_24h
+        )
+        self.assertTrue(crypto)
+        inserted= self.session.query(Cryptocurrency).filter_by(symbol=symbol).one()
+        self.assertEqual(inserted.name,name)
+        self.assertEqual(inserted.price, price)
+        self.assertEqual(inserted.percent_change_24h, percent_change_24h)
 
     def test_add_portfolio_to_database_succesfully(self):
 
