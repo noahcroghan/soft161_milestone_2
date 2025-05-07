@@ -1,7 +1,7 @@
 from sys import stderr
 
 from pycoingecko import CoinGeckoAPI
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from installer.database import CryptoDatabase, Cryptocurrency, User
 
@@ -29,6 +29,10 @@ def main():
         add_starter_data(session)
         session.commit()
         print('Records created.')
+    except IntegrityError:
+        print('Integrity error occurred during database setup', file=stderr)
+        print('***This is likely because you did not drop and recreate the database***', file=stderr)
+        exit(1)
     except SQLAlchemyError as exception:
         print('Database setup failed!', file=stderr)
         print(f'Cause: {exception}', file=stderr)
