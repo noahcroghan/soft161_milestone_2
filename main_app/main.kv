@@ -620,13 +620,24 @@
             size_hint_y: None
             height: 40
             font_size: 25
-        Button:
-            id: reload_update_button
-            text: ''
-            size_hint_y: None
-            height: 40
-            font_size: 25
-#            on_press: app.root.get_screen('CheckPortfolioScreen').check_reload_or_update()
+            on_text: app.root.get_screen('CheckPortfolioScreen').portfolio_id_spinner_pressed()
+        GridLayout:
+            cols: 2
+            rows: 1
+            spacing: 10
+            Button:
+                id: reload_portfolio_button
+                text: "Reload Portfolio"
+                font_size: 20
+                background_color: ((151/256), (199/256), (174/256), 1.0)
+                on_press: app.root.get_screen('CheckPortfolioScreen').reload_portfolio()
+            Button:
+                id: update_entry_button
+                text: "Update Entry"
+                font_size: 20
+                background_color: ((151/256), (199/256), (174/256), 1.0)
+#                font_name: 'Roboto-Bold'
+#                on_press: app.root.get_screen('NewPortfolioScreen').create_new_portfolio()
         Image:
             id: portfolio_chart
             source: ''
