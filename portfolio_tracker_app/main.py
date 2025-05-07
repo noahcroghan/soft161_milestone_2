@@ -112,7 +112,6 @@ class NewCryptoScreen(Screen):
 
 
 class NewPortfolioScreen(Screen):
-
     def update_spinner_values(self):
         cryptocurrencies = get_all_cryptocurrencies()
         self.ids.new_portfolio_crypto.values = cryptocurrencies
@@ -141,7 +140,12 @@ class NewPortfolioScreen(Screen):
     def create_new_portfolio(self):
         db_session = CryptoDatabase.get_session()
         selected_crypto = self.ids.new_portfolio_crypto.text
-        coin_quantity = float(self.ids.new_portfolio_quantity.text)
+        try:
+            coin_quantity = float(self.ids.new_portfolio_quantity.text)
+        except ValueError:
+            self.show_error("Quantity field requires a numerical value.", 25)
+            return
+
         purchase_date = self.ids.new_portfolio_date.text
         selected_user = App.get_running_app().current_user
 
@@ -432,4 +436,13 @@ class CheckPortfolioScreen(Screen):
             self.show_message("Portfolio Summary Reloaded", 30)
 
 class UpdateEntryScreen(Screen):
-    pass
+    def __init__(self, portfolio_entry):
+        self.portfolio_entry = portfolio_entry
+
+    def update_spinner_values(self):
+        cryptocurrencies = get_all_cryptocurrencies()
+        self.ids.update_entry_crypto.values = cryptocurrencies
+
+    def on_enter(self):
+        self.update_spinner_values()
+        self.ids.update_entry_crypto.text = "Crypto Name" + self.portfolio_entry
