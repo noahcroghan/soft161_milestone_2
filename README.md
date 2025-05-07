@@ -17,8 +17,8 @@
 
 # Instructions
 
-1. Clone the repository
-2. Change into the cloned directory i.e `cd soft161_milestone_2` or import the directory into your IDE
+1. Clone the repository with Git
+2. Change into the cloned directory i.e. `cd soft161_milestone_2` or import the directory into your IDE
 3. Install Python 3.12
 4. Install PIP package dependencies `pycoingecko`, `mplfinance`, `matplotlib`, `sqlalchemy`, and `kivy`
 5. Install MySQL Server Community Edition
@@ -27,7 +27,7 @@
 ```python
 username = 'root'  # Change username if applicable
 port = 3306  # Change port if applicable
-password = ""  # Enter password between quotes
+password = ""  # Enter MySQL server password between quotes or leave blank
 ```
 
 7. Enter a MySQL shell, typically by running `mysql` from a terminal
