@@ -1,7 +1,10 @@
+from datetime import datetime
 from unittest import TestCase
 
-from installer.database import CryptoDatabase, Persisted, User, Cryptocurrency
-from portfolio_tracker_app.main import NewCryptoScreen, add_crypto_to_database
+from requests import session
+
+from installer.database import CryptoDatabase, Persisted, User, Cryptocurrency, Portfolio
+from portfolio_tracker_app.main import NewCryptoScreen, add_crypto_to_database, add_portfolio_to_database
 
 
 class TestCryptoApp(TestCase):
@@ -37,6 +40,20 @@ class TestCryptoApp(TestCase):
 
         inserted = self.session.query(Cryptocurrency).filter_by(symbol='CSC').one()
         self.assertEqual(inserted.name,"Capstone")
+
+    def test_add_portfolio_to_database_succesfully(self):
+
+        example_portfolio= add_portfolio_to_database(
+            session = self.session,
+            user_id = 1,
+            crypto_id = 1,
+            coin_amount = 24,
+            purchase_date = datetime(2025,2,6).date(),
+            initial_investment_amount = 28
+            )
+        self.assertTrue(example_portfolio)
+        inserted = self.session.query(Portfolio).filter_by(purchase_date=datetime(2025,2,6).date()).one()
+        self.assertEqual(inserted.coin_amount,24)
 
     def tearDown(self):
         self.session.close()

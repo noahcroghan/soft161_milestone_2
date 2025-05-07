@@ -21,6 +21,16 @@ def add_crypto_to_database(session,name,symbol,price,percent_change_24h):
     session.add(new_crypto)
     session.commit()
     return True
+@staticmethod
+def add_portfolio_to_database(session, user_id,crypto_id,coin_amount,purchase_date,initial_investment_amount):
+    new_portfolio = Portfolio(user_id=user_id,
+                              crypto_id = crypto_id,
+                              coin_amount=coin_amount,
+                              purchase_date=purchase_date,
+                              initial_investment_amount=initial_investment_amount)
+    session.add(new_portfolio)
+    session.commit()
+    return True
 
 def get_all_cryptocurrencies():
     db_session = CryptoDatabase.get_session()
@@ -135,7 +145,7 @@ class NewPortfolioScreen(Screen):
         selected_user = App.get_running_app().current_user
 
         try:
-            purchase_date = datetime.strptime(purchase_date, "%Y-%m-%d")
+            purchase_date = datetime.strptime(purchase_date, "%Y-%m-%d").date()
         except ValueError:
             self.show_error("Invalid date format. Use YYYY-MM-DD.", 25)
             return
@@ -177,11 +187,13 @@ class NewPortfolioScreen(Screen):
         except ValueError:
             self.show_error("Purchase date must be within last 365 days", 25)
             return
-
         initial_investment = price_at_purchase * coin_quantity
-
-        db_session.add(Portfolio(user_id=selected_user_id[0], crypto_id=selected_crypto_id[0], coin_amount=coin_quantity, purchase_date=purchase_date, initial_investment_amount=initial_investment))
-        db_session.commit()
+        user_id =selected_user_id[0]
+        crypto_id =selected_crypto_id[0]
+        coin_amount= coin_quantity
+        initial_investment_amount = initial_investment
+        session = db_session
+        add_portfolio_to_database(session,user_id,crypto_id,coin_amount,purchase_date,initial_investment_amount)
         self.show_message("Submitted", 50)
 
 class CheckPortfolioScreen(Screen):
@@ -225,7 +237,7 @@ class CheckPortfolioScreen(Screen):
             else:
                 portfolio_investment = portfolio_investment[0]
             initial_investment += float(portfolio_investment)
-            print
+
             print(portfolio_investment)
             print(initial_investment)
 
