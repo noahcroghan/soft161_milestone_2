@@ -590,7 +590,7 @@
     name: "CheckPortfolioScreen"
     GridLayout:
         cols: 1
-        rows: 14
+        rows: 15
         padding: 20
         spacing: 10
         Label:
@@ -603,55 +603,70 @@
             id: check_total_portfolio
             text: 'View Portfolio Summary'
             size_hint_y: None
-            height: 50
-            font_size: 30
+            height: 40
+            font_size: 25
             on_press: app.root.get_screen('CheckPortfolioScreen').view_portfolio_summary()
         Button:
             id: check_portfolio_pie
             text: 'View Portfolio Pie Chart'
             size_hint_y: None
-            height: 50
-            font_size: 30
+            height: 40
+            font_size: 25
+            on_press: app.root.get_screen('CheckPortfolioScreen').create_portfolio_chart()
         Spinner:
             id: check_portfolio_ids
             text: 'Select Specific Entry'
             values: []
             size_hint_y: None
-            height: 50
-            font_size: 30
-        Label:
-            text: ""
+            height: 40
+            font_size: 25
+        Button:
+            id: reload_update_button
+            text: ''
+            size_hint_y: None
+            height: 40
+            font_size: 25
+#            on_press: app.root.get_screen('CheckPortfolioScreen').check_reload_or_update()
+        Image:
+            id: portfolio_chart
+            source: ''
+            halign: 'center'
+            valign: 'middle'
+            size_hint_y: None
+            size_hint_x: None
+            width: dp(230)
+            height: dp(230)
         Label:
             text: "Investment Amount:"
-            font_size: 35
+            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
             id: check_investment_amount
             color: ((50/256), (222/256), (153/256), 1.0)
-            font_size: 35
+            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
             text: "Current Portfolio Value:"
-            font_size: 35
+            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
             id: check_portfolio_value
             color: ((50/256), (222/256), (153/256), 1.0)
-            font_size: 35
+            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
             text: "Portfolio Value Change:"
-            font_size: 35
+            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
             id: check_value_change
             color: ((50/256), (222/256), (153/256), 1.0)
-            font_size: 35
+            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
@@ -669,7 +684,6 @@
                 root.manager.transition.direction = 'right'
                 root.manager.current = 'MainScreen'
                 app.root.get_screen('CheckPortfolioScreen').go_home()
-#                    app.go_to_home(check_portfolio_message)
 
 
 <Screen>:

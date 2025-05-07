@@ -6,6 +6,9 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from installer.database import CryptoDatabase, User, Cryptocurrency, Portfolio  # Adjust path if needed
 from installer.database_installer import coin_gecko_api
+
+from matplotlib import pyplot as plt
+
 @staticmethod
 def add_crypto_to_database(session,name,symbol,price,percent_change_24h):
     crypto_exists = session.query(Cryptocurrency).filter(
@@ -133,7 +136,6 @@ class NewPortfolioScreen(Screen):
         self.ids.new_portfolio_quantity.text = ""
         self.ids.new_portfolio_date.text = ""
 
-
     def on_enter(self):
         self.update_spinner_values()
 
@@ -219,44 +221,65 @@ class CheckPortfolioScreen(Screen):
         self.ids.check_investment_amount.text = ""
         self.ids.check_portfolio_value.text = ""
         self.ids.check_value_change.text = ""
+        self.ids.portfolio_chart.source = ''
 
     def on_enter(self):
         self.update_spinner_values()
+
+    def get_user(self, db_session):
+        selected_user = App.get_running_app().current_user
+        selected_user = [users.user_id for users in db_session.query(User).all() if users.user_name == selected_user]
+
+        if len(selected_user) != 1:
+            self.show_error("Invalid user selected", 25)
+            return
+        else:
+            selected_user = selected_user[0]
+
+        return selected_user
 
     def initial_investment(self):
         self.show_message("Calculating Initial Investment Amount...", 25)
         db_session = CryptoDatabase.get_session()
         portfolios = get_all_portfolios()
         initial_investment = float(0.0)
+        selected_user = self.get_user(db_session)
 
         for portfolio in portfolios:
             portfolio = int(portfolio)
-            portfolio_investment = [portfolios.initial_investment_amount for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == portfolio]
-            if len(portfolio_investment) != 1:
-                self.show_error("Invalid portfolio selected", 30)
-            else:
-                portfolio_investment = portfolio_investment[0]
-            initial_investment += float(portfolio_investment)
+            portfolio_user = [portfolios.user_id for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == portfolio]
 
-            print(portfolio_investment)
-            print(initial_investment)
+            if len(portfolio_user) != 1:
+                self.show_error("Invalid user selected", 25)
+                return
+            else:
+                portfolio_user = portfolio_user[0]
+
+            if portfolio_user == selected_user:
+                portfolio_investment = [portfolios.initial_investment_amount for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == portfolio]
+                if len(portfolio_investment) != 1:
+                    self.show_error("Invalid portfolio selected", 30)
+                else:
+                    portfolio_investment = portfolio_investment[0]
+                initial_investment += float(portfolio_investment)
+                print(portfolio_investment)
+                print(initial_investment)
 
         return initial_investment
 
-    def current_total_value(self):
-        self.show_message("Calculating Current Total Value...", 25)
-        db_session = CryptoDatabase.get_session()
-        portfolios = get_all_portfolios()
-        current_total = float(0.0)
+    def check_portfolio_entry(self, portfolio, db_session, selected_user):
+        portfolio = int(portfolio)
+        portfolio_user = [portfolios.user_id for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == portfolio]
 
-        for portfolio in portfolios:
-            # portfolio_id = [portfolios.id for portfolios in db_session.query(Portfolio).all() if portfolio.portfolio_id == portfolio]
-            # if portfolio_id != 1:
-            #     self.show_error("Invalid portfolio selected", 30)
-            # else:
-            #     portfolio_id = portfolio_id[0]
-            portfolio = int(portfolio)
-            selected_crypto_id = [portfolios.crypto_id for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == portfolio]
+        if len(portfolio_user) != 1:
+            self.show_error("Invalid user selected", 25)
+            return
+        else:
+            portfolio_user = portfolio_user[0]
+
+        if portfolio_user == selected_user:
+            selected_crypto_id = [portfolios.crypto_id for portfolios in db_session.query(Portfolio).all() if
+                                  portfolios.portfolio_id == portfolio]
 
             if len(selected_crypto_id) != 1:
                 self.show_error("Invalid cryptocurrency selected", 25)
@@ -264,14 +287,15 @@ class CheckPortfolioScreen(Screen):
             else:
                 selected_crypto_id = selected_crypto_id[0]
 
-            selected_crypto_name = [crypto.name for crypto in db_session.query(Cryptocurrency).all() if crypto.crypto_id == selected_crypto_id]
-            selected_coin_gecko_id = [crypto.coingecko_id for crypto in db_session.query(Cryptocurrency).all() if crypto.crypto_id == selected_crypto_id]
+            selected_crypto_name = [crypto.name for crypto in db_session.query(Cryptocurrency).all() if
+                                    crypto.crypto_id == selected_crypto_id]
+            selected_coin_gecko_id = [crypto.coingecko_id for crypto in db_session.query(Cryptocurrency).all() if
+                                      crypto.crypto_id == selected_crypto_id]
 
             if len(selected_crypto_name) != 1 or len(selected_coin_gecko_id) != 1:
                 self.show_error("Invalid coingecko cryptocurrency selected", 25)
                 return
             else:
-                selected_crypto_name = selected_crypto_name[0]
                 selected_coin_gecko_id = selected_coin_gecko_id[0]
 
             current_price = coin_gecko_api.get_price(selected_coin_gecko_id, vs_currencies="usd")
@@ -287,20 +311,38 @@ class CheckPortfolioScreen(Screen):
             else:
                 coin_quantity = coin_quantity[0]
 
-            current_total += (current_price[selected_coin_gecko_id]["usd"] * float(coin_quantity))
+            return current_price[selected_coin_gecko_id]["usd"] * float(coin_quantity)
+        else:
+            return
+
+    def current_total_value(self):
+        db_session = CryptoDatabase.get_session()
+        self.show_message("Calculating Current Total Value...", 25)
+        portfolios = get_all_portfolios()
+        current_total = float(0.0)
+        selected_user = self.get_user(db_session)
+
+        for portfolio in portfolios:
+
+            entry_value = self.check_portfolio_entry(portfolio, db_session, selected_user)
+            current_total += entry_value
             print(current_total)
 
         return current_total
 
     def view_portfolio_summary(self):
-        db_session = CryptoDatabase.get_session()
         initial_investment = self.initial_investment()
         print(initial_investment)
         current_total_value = self.current_total_value()
         self.show_message("", 30)
         print(current_total_value)
 
-        value_change = ((current_total_value - initial_investment) / initial_investment)*100
+        try:
+            value_change = ((current_total_value - initial_investment) / initial_investment)*100
+        except ZeroDivisionError:
+            self.show_error("Initial Investment Amount Not Found", 25)
+            return
+
         if value_change < 0:
             self.ids.check_value_change.color = (1, 0, 0, 1)
         else:
@@ -310,3 +352,43 @@ class CheckPortfolioScreen(Screen):
         self.ids.check_portfolio_value.text = "$" + str(current_total_value)
         self.ids.check_value_change.text = str(value_change) + "%"
         self.show_message("Complete", 30)
+
+    def create_portfolio_chart(self):
+        db_session = CryptoDatabase.get_session()
+        portfolios = get_all_portfolios()
+        user_entries = []
+        current_values = []
+        selected_user = self.get_user(db_session)
+
+        for portfolio in portfolios:
+            portfolio = int(portfolio)
+            portfolio_user = [portfolios.user_id for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == portfolio]
+
+            if len(portfolio_user) != 1:
+                self.show_error("Invalid user selected", 25)
+                return
+            else:
+                portfolio_user = portfolio_user[0]
+
+            if portfolio_user == selected_user:
+                user_entries.append(str(portfolio))
+
+            entry_value = self.check_portfolio_entry(portfolio, db_session, selected_user)
+            if entry_value:
+                current_values.append(entry_value)
+            print(current_values)
+
+        plt.figure(figsize=(4, 4))
+
+        plt.pie(current_values, labels = user_entries)
+
+        plt.title("Portfolio Entry Values")
+        plt.tight_layout()
+
+        chart_file = "portfolio_chart.png"
+        plt.savefig(chart_file)
+        plt.close()
+
+        self.ids.portfolio_chart.source = chart_file
+        self.ids.portfolio_chart.reload()
+        self.show_message("Portfolio chart loaded successfully.", 25)
