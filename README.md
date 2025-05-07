@@ -51,9 +51,9 @@ password = ""  # Enter MySQL server password between quotes or leave blank
 9. In the MySQL shell, run the following commands (only need to run these on the first installation).
     - `DROP DATABASE IF EXISTS crypto;`
     - `CREATE DATABASE crypto;`
-10. Run `installer/database_installer.py`.
+10. Run the installer with `python -m installer.database_installer`.
+    - (replace `python` with `python3` if necessary)
     - This will populate the database. You can verify it worked with the following commands:
         - `USE crypto;` (Will select the database)
         - `SELECT * FROM cryptocurrencies;` (Will get all cryptocurrency coins in the database)
 11. Run the main application from the root directory with `python -m main_app.main` in a terminal or from your IDE.
-    (replace `python` with `python3` if necessary)
