@@ -234,7 +234,7 @@ class CheckPortfolioScreen(Screen):
         self.ids.check_portfolio_message.text = ""
         self.ids.check_portfolio_message.color = ((50/256), (222/256), (153/256), 1.0)
         self.ids.check_portfolio_message.font_size = 50
-        self.ids.check_portfolio_ids.text = "Portfolio ID"
+        self.ids.check_portfolio_ids.text = "Select Specific Entry"
         self.ids.check_investment_amount.text = ""
         self.ids.check_portfolio_value.text = ""
         self.ids.check_value_change.text = ""
@@ -431,3 +431,6 @@ class CheckPortfolioScreen(Screen):
         if self.portfolio_displayed:
             self.view_portfolio_summary()
             self.show_message("Portfolio Summary Reloaded", 30)
+
+class UpdateEntryScreen(Screen):
+    pass
