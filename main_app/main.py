@@ -3,7 +3,6 @@ from sys import stderr
 
 from kivy.app import App
 from kivy.core.window import Window
-from kivy.modules import inspector  # For Inspection
 from kivy.properties import StringProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from sqlalchemy.exc import SQLAlchemyError, ProgrammingError
@@ -35,8 +34,8 @@ class LoginScreen(Screen):
             return
         try:
             db = CryptoDatabase(CryptoDatabase.construct_mysql_url())
-            session= db.create_session()
-            added_username = db.create_user(new_username,session)
+            session = db.create_session()
+            added_username = db.create_user(new_username, session)
             session.close()
 
             if added_username:
@@ -135,8 +134,6 @@ class MainApp(App):
         screen_manager.add_widget(NewCryptoScreen())
         screen_manager.add_widget(NewPortfolioScreen())
         screen_manager.add_widget(CheckPortfolioScreen())
-
-        inspector.create_inspector(Window, screen_manager)  # For Inspection
 
         return screen_manager
 
