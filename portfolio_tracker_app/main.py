@@ -9,7 +9,6 @@ from installer.database_installer import coin_gecko_api
 
 from matplotlib import pyplot as plt
 
-@staticmethod
 def add_crypto_to_database(session,name,symbol,price,percent_change_24h):
     crypto_exists = session.query(Cryptocurrency).filter(
         (Cryptocurrency.symbol==symbol)|(Cryptocurrency.name==name)).first()
@@ -24,7 +23,7 @@ def add_crypto_to_database(session,name,symbol,price,percent_change_24h):
     session.add(new_crypto)
     session.commit()
     return True
-@staticmethod
+
 def add_portfolio_to_database(session, user_id,crypto_id,coin_amount,purchase_date,initial_investment_amount):
     new_portfolio = Portfolio(user_id=user_id,
                               crypto_id = crypto_id,
