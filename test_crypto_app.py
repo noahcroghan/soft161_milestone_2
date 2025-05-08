@@ -29,7 +29,7 @@ class TestCryptoApp(TestCase):
         self.assertEqual(user.user_name,'Deku')
 
     #Test inserting adding new crypto to the database
-    def test_add_crypto_to_database_sucessfully(self):
+    def test_add_crypto_to_database_successfully(self):
         example_crypto= add_crypto_to_database(
             session=self.session,
             name="Capstone",
@@ -58,10 +58,10 @@ class TestCryptoApp(TestCase):
         self.assertTrue(crypto)
         inserted= self.session.query(Cryptocurrency).filter_by(symbol=symbol).one()
         self.assertEqual(inserted.name,name)
-        self.assertEqual(inserted.price, price)
-        self.assertEqual(inserted.percent_change_24h, percent_change_24h)
+        self.assertEqual(float(inserted.current_price), price)
+        self.assertEqual(float(inserted.percent_change_24h), percent_change_24h)
 
-    def test_add_portfolio_to_database_succesfully(self):
+    def test_add_portfolio_to_database_successfully(self):
 
         example_portfolio= add_portfolio_to_database(
             session = self.session,
