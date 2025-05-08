@@ -9,7 +9,6 @@ from installer.database_installer import coin_gecko_api
 
 from matplotlib import pyplot as plt
 
-@staticmethod
 def add_crypto_to_database(session,name,symbol,price,percent_change_24h):
     crypto_exists = session.query(Cryptocurrency).filter(
         (Cryptocurrency.symbol==symbol)|(Cryptocurrency.name==name)).first()
@@ -24,7 +23,7 @@ def add_crypto_to_database(session,name,symbol,price,percent_change_24h):
     session.add(new_crypto)
     session.commit()
     return True
-@staticmethod
+
 def add_portfolio_to_database(session, user_id,crypto_id,coin_amount,purchase_date,initial_investment_amount):
     new_portfolio = Portfolio(user_id=user_id,
                               crypto_id = crypto_id,
@@ -113,7 +112,6 @@ class NewCryptoScreen(Screen):
 
 
 class NewPortfolioScreen(Screen):
-
     def update_spinner_values(self):
         cryptocurrencies = get_all_cryptocurrencies()
         self.ids.new_portfolio_crypto.values = cryptocurrencies
@@ -142,7 +140,12 @@ class NewPortfolioScreen(Screen):
     def create_new_portfolio(self):
         db_session = CryptoDatabase.get_session()
         selected_crypto = self.ids.new_portfolio_crypto.text
-        coin_quantity = float(self.ids.new_portfolio_quantity.text)
+        try:
+            coin_quantity = float(self.ids.new_portfolio_quantity.text)
+        except ValueError:
+            self.show_error("Quantity field requires a numerical value.", 25)
+            return
+
         purchase_date = self.ids.new_portfolio_date.text
         selected_user = App.get_running_app().current_user
 
@@ -234,7 +237,7 @@ class CheckPortfolioScreen(Screen):
         self.ids.check_portfolio_message.text = ""
         self.ids.check_portfolio_message.color = ((50/256), (222/256), (153/256), 1.0)
         self.ids.check_portfolio_message.font_size = 50
-        self.ids.check_portfolio_ids.text = "Portfolio ID"
+        self.ids.check_portfolio_ids.text = "Select Specific Entry"
         self.ids.check_investment_amount.text = ""
         self.ids.check_portfolio_value.text = ""
         self.ids.check_value_change.text = ""
@@ -431,3 +434,15 @@ class CheckPortfolioScreen(Screen):
         if self.portfolio_displayed:
             self.view_portfolio_summary()
             self.show_message("Portfolio Summary Reloaded", 30)
+
+class UpdateEntryScreen(Screen):
+    def __init__(self, portfolio_entry):
+        self.portfolio_entry = portfolio_entry
+
+    def update_spinner_values(self):
+        cryptocurrencies = get_all_cryptocurrencies()
+        self.ids.update_entry_crypto.values = cryptocurrencies
+
+    def on_enter(self):
+        self.update_spinner_values()
+        self.ids.update_entry_crypto.text = "Crypto Name" + self.portfolio_entry
