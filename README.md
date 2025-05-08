@@ -6,6 +6,7 @@ File Structure
 - `installer/database_installer.py` Creates tables and records in the database
 - `historical_prices_app/main.py` Code for the Historical Price Viewer App
 - `portfolio_tracker_app/main.py` Code for the Portfolio Tracker App
+- `test_crypto_app.py` Unit tests for the Crypto Database
 
 # Applications
 
