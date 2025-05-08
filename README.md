@@ -32,7 +32,7 @@ File Structure
 
 3. Change into the cloned directory with `cd soft161_milestone_2` or import the directory into your IDE
 4. Install and use [Python 3.12](https://www.python.org/downloads/), do so in
-   a [virtual environment](https://wiki.archlinux.org/title/Python/Virtual_environment) if necessary.
+   a [virtual environment](https://docs.python.org/3/library/venv.html) if necessary.
     - Newer or older versions of Python are not guaranteed to work
 5. Install package dependencies with `pip install pycoingecko mplfinance matplotlib sqlalchemy kivy`
     - You can alternatively install these in your IDE
