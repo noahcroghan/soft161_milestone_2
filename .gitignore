@@ -17,3 +17,6 @@ config.py
 chart.png
 portfolio_chart.png
 historical_data.csv
+
+# MacOS File
+.DS_Store

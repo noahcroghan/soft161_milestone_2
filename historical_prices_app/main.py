@@ -2,7 +2,7 @@ from datetime import datetime, timezone, timedelta
 
 import mplfinance as mpf
 import pandas as pd
-from kivy.metrics import dp
+from kivy.metrics import sp
 from kivy.properties import BooleanProperty
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
@@ -63,16 +63,16 @@ class SelectCoinScreen(Screen):
         self.ids.select_coin_message.opacity = 1
 
     def add_coin_to_ui(self, coin):
-        box = BoxLayout(size_hint_y=None, height=dp(60), spacing=dp(10), padding=dp(10))
+        box = BoxLayout(size_hint_y=None, height=sp(60), spacing=sp(10), padding=sp(10))
 
-        coin_label = ClickableLabel(text=f"{coin.name} [i]({coin.symbol})[/i]", markup=True, text_size=(dp(115), None),
-                                    shorten=False, halign="center", valign="middle")
+        coin_label = ClickableLabel(text=f"{coin.name} [i]({coin.symbol})[/i]", markup=True, text_size=(sp(115), None),
+                                    shorten=False, halign="center", valign="middle", font_size=sp(14))
         coin_label.coin = coin
         coin_label.bind(on_press=self.go_to_history_from_label)
 
         box.add_widget(coin_label)
 
-        box.add_widget(Label(text=f"${coin.current_price:,.2f}"))
+        box.add_widget(Label(text=f"${coin.current_price:,.2f}", font_size=sp(14)))
 
         change_text = f"{coin.percent_change_24h:.2f}%"
         change_color = (1, 1, 1, 1)
@@ -80,7 +80,7 @@ class SelectCoinScreen(Screen):
             change_color = ((214 / 256), (69 / 256), (69 / 256), 1.0)
         elif coin.percent_change_24h > 0:
             change_color = ((50 / 256), (222 / 256), (153 / 256), 1.0)
-        box.add_widget(Label(text=change_text, color=change_color))
+        box.add_widget(Label(text=change_text, color=change_color, font_size=sp(14)))
 
         self.ids.coin_container.add_widget(box)
 

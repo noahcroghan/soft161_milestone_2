@@ -1,44 +1,41 @@
-# TODO: Make theming/styling more similar between all screens
-
 <LoginScreen>:
     name: 'LoginScreen'
     BoxLayout:
         orientation: 'vertical'
-        padding: [50, 100]
-        spacing: 20
+        padding: [sp(50), sp(100)]
+        spacing: sp(20)
 
         Label:
             text: 'Login to Your Profile'
-            font_size: 40
-            font_name: 'Roboto-Bold'
+
             size_hint_y: None
-            height: dp(60)
+            height: sp(60)
 
         Spinner:
             id: existing_users_spinner
             text: 'Select Existing User'
             values: []
             size_hint_y: None
-            height: dp(40)
+            height: sp(40)
 
         TextInput:
             id: new_username_input
             hint_text: 'Enter New Username'
             multiline: False
             size_hint_y: None
-            height: dp(40)
+            height: sp(40)
 
         Button:
             text: 'Create Profile'
             on_press: app.root.get_screen('LoginScreen').create_username()
             size_hint_y: None
-            height: dp(40)
+            height: sp(40)
 
         Button:
             text: 'Login'
             on_press: app.root.get_screen('LoginScreen').login_selected_user()
             size_hint_y: None
-            height: dp(40)
+            height: sp(40)
         Label:
             id: login_message
             text: ""
@@ -51,19 +48,18 @@
             orientation: 'horizontal'
             Label:
                 text: 'Cryptocurrency App'
-                font_size: 60
-                font_name: 'Roboto-Bold'
+
+                font_size: sp(30)
 
         GridLayout:
             cols: 1
             rows: 8
-            padding: 20
-            spacing: 20
+            padding: sp(20)
+            spacing: sp(20)
             Label:
                 id: welcome_label
                 text: "Welcome: " + app.current_user
-                font_size: 40
-                font_name: 'Roboto-Bold'
+
             Button:
                 text: 'New Cryptocurrency'
                 on_press:
@@ -104,41 +100,40 @@
     name: 'SwitchUserScreen'
     BoxLayout:
         orientation: 'vertical'
-        padding: [50, 100]
-        spacing: 20
+        padding: [sp(50), sp(100)]
+        spacing: sp(20)
 
         Label:
             text: 'Switch the User'
-            font_size: 40
-            font_name: 'Roboto-Bold'
+
             size_hint_y: None
-            height: dp(60)
+            height: sp(60)
 
         Spinner:
             id: existing_users_spinner
             text: 'Select Existing User'
             values: []
             size_hint_y: None
-            height: dp(40)
+            height: sp(40)
 
         TextInput:
             id: new_username_input
             hint_text: 'Enter New Username'
             multiline: False
             size_hint_y: None
-            height: dp(40)
+            height: sp(40)
 
         Button:
             text: 'Create Profile'
             on_press: root.get_new_user()
             size_hint_y: None
-            height: dp(40)
+            height: sp(40)
 
         Button:
             text: 'Login'
             on_press: root.confirm_user_switch()
             size_hint_y: None
-            height: dp(40)
+            height: sp(40)
         Label:
             id: login_message
             text: ""
@@ -154,23 +149,21 @@
     ScrollView:
         BoxLayout:
             orientation: 'vertical'
-            padding: dp(20)
-            spacing: dp(10)
+            padding: sp(20)
+            spacing: sp(10)
             size_hint_y: None
             height: self.minimum_height
 
             Label:
                 text: 'Help & About'
-                font_size: 40
-                font_name: 'Roboto-Bold'
+
                 size_hint_y: None
-                height: dp(50)
+                height: sp(50)
 
             Label:
                 text: 'Using the Main App'
-                font_size: 35
                 size_hint_y: None
-                height: dp(40)
+                height: sp(40)
 
             Label:
                 text:
@@ -181,7 +174,6 @@
                     "- This includes the 'New Cryptocurrency' screen, 'New Portfolio Entry' screen, 'Check Portfolio Value' screen, 'Select Coin' screen, 'View History' screen, 'About/Help' screen, and 'Switch User' screen.\n\n" \
                     "- The main menu also displays the currently logged in user."
                 markup: True
-                font_size: 28
                 text_size: self.width, None
                 halign: 'left'
                 valign: 'top'
@@ -190,14 +182,12 @@
 
             Label:
                 text: 'Using the Portfolio Tracker App'
-                font_size: 35
                 size_hint_y: None
-                height: dp(40)
+                height: sp(40)
 
             Label:
                 text: "Placeholder" # TODO: Add instructions
                 markup: True
-                font_size: 28
                 text_size: self.width, None
                 halign: 'left'
                 valign: 'top'
@@ -206,9 +196,8 @@
 
             Label:
                 text: 'Using the Historical Price Viewer App'
-                font_size: 35
                 size_hint_y: None
-                height: dp(40)
+                height: sp(40)
 
             Label:
                 text:
@@ -223,7 +212,6 @@
                     "- Tap Submit to view a price chart.\n\n" \
                     "- Tap Export to save data to a CSV."
                 markup: True
-                font_size: 28
                 text_size: self.width, None
                 halign: 'left'
                 valign: 'top'
@@ -232,20 +220,19 @@
 
             Label:
                 text: 'API Reference'
-                font_size: 35
                 size_hint_y: None
-                height: dp(40)
+                height: sp(40)
 
             Button:
                 text: 'Visit CoinGecko API documentation'
                 size_hint_y: None
-                height: dp(40)
+                height: sp(40)
                 on_press: root.open_link()
 
             Button:
-                text: 'Back to Main Menu'
+                text: 'HOME'
                 size_hint_y: None
-                height: dp(40)
+                height: sp(40)
                 on_press:
                     root.manager.transition.direction = 'right'
                     root.manager.current = 'MainScreen'
@@ -254,8 +241,8 @@
     name: 'SelectCoinScreen'
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(10)
-        spacing: dp(10)
+        padding: sp(10)
+        spacing: sp(10)
 
 
         Label:
@@ -265,12 +252,12 @@
             valign: 'middle'
             text_size: self.size
             size_hint_y: None
-            height: dp(30)
+            height: sp(30)
 
         TextInput:
             size_hint_y: None
-            spacing: dp(10)
-            padding: [dp(10), 0]
+            spacing: sp(10)
+            padding: [sp(10), 0]
             id: search_input
             hint_text: 'Search...'
             multiline: False
@@ -279,25 +266,27 @@
         Label:
             id: select_coin_message
             text: 'Loading Data...'
-            font_size: '14sp'
             size_hint_y: None
             halign: 'center'
 
         BoxLayout:
             size_hint_y: None
-            height: dp(20)
-            spacing: dp(10)
-            padding: [dp(10), 0]
+            height: sp(20)
+            spacing: sp(10)
+            padding: [sp(10), 0]
 
             Label:
                 text: '[u]Coin Name [i](Symbol)[/i][/u]'
                 markup: True
+                font_size: sp(14)
             Label:
                 text: '[u]Current Price[/u]'
                 markup: True
+                font_size: sp(14)
             Label:
                 text: '[u]24h percent change[/u]'
                 markup: True
+                font_size: sp(14)
         ScrollView:
             do_scroll_x: False
             do_scroll_y: True
@@ -308,9 +297,9 @@
                 size_hint_y: None
                 height: self.minimum_height
         Button:
-            text: 'Back to Main Menu'
+            text: 'HOME'
             size_hint_y: None
-            height: dp(40)
+            height: sp(40)
             on_press:
                 root.manager.current = 'MainScreen'
                 root.manager.transition.direction = 'right'
@@ -323,8 +312,8 @@
 
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(10)
-        spacing: dp(10)
+        padding: sp(10)
+        spacing: sp(10)
 
         ScrollView:
             do_scroll_y: True
@@ -334,14 +323,14 @@
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
-                padding: dp(10)
-                spacing: dp(10)
+                padding: sp(10)
+                spacing: sp(10)
 
                 Label:
                     text: 'View History'
                     bold: True
                     size_hint_y: None
-                    height: dp(30)
+                    height: sp(30)
                     halign: 'center'
                     valign: 'middle'
                     text_size: self.size
@@ -350,28 +339,28 @@
                     id: coin_name_spinner
                     text: 'Select Coin'
                     size_hint_y: None
-                    height: dp(40)
+                    height: sp(40)
 
                 TextInput:
                     id: start_date_input
                     hint_text: 'Start Date (YYYY-MM-DD)'
                     multiline: False
                     size_hint_y: None
-                    height: dp(40)
+                    height: sp(40)
 
                 TextInput:
                     id: end_date_input
                     hint_text: 'End Date (YYYY-MM-DD)'
                     multiline: False
                     size_hint_y: None
-                    height: dp(40)
+                    height: sp(40)
 
                 Spinner:
                     id: historical_price_chart_spinner
                     text: 'Select Chart Type'
                     values: ['Line Chart', 'Bar Chart', 'Candlestick Chart']
                     size_hint_y: None
-                    height: dp(40)
+                    height: sp(40)
 
 
                 Button:
@@ -379,15 +368,14 @@
                     text: 'Submit'
                     on_press: root.submit_history()
                     size_hint_y: None
-                    height: dp(40)
+                    height: sp(40)
 
                 Label:
                     id: history_message
                     text: ''
-                    font_size: '14sp'
                     color: (1, 0, 0, 1)
                     size_hint_y: None
-                    height: dp(20)
+                    height: sp(20)
                     halign: 'center'
                     text_size: self.size
 
@@ -395,14 +383,14 @@
                     id: chart
                     source: ''
                     size_hint_y: None
-                    height: dp(300)
+                    height: sp(300)
                     fit_mode: 'contain'
 
                 Button:
                     text: 'Export data to CSV file'
                     on_press: root.export_to_csv()
                     size_hint_y: None
-                    height: dp(40)
+                    height: sp(40)
                     disabled: not root.is_historical_data_generated
                     opacity: 1 if root.is_historical_data_generated else 0
 
@@ -412,32 +400,29 @@
                 root.manager.current = 'SelectCoinScreen'
                 root.manager.transition.direction = 'right'
             size_hint_y: None
-            height: dp(40)
+            height: sp(40)
             disabled: not root.came_from_select_coin
             opacity: 1 if root.came_from_select_coin else 0
 
         Button:
-            text: 'Back to Main Menu'
+            text: 'HOME'
             on_press:
                 root.manager.current = 'MainScreen'
                 root.manager.transition.direction = 'right'
             size_hint_y: None
-            height: dp(40)
 
 <NewCryptoScreen>:
     name: "NewCryptoScreen"
     GridLayout:
         cols: 1
         rows: 11
-        padding: 20
-        spacing: 10
+        padding: sp(20)
+        spacing: sp(10)
         Label:
             text: 'New Cryptocurrency'
-            font_size: 50
-            font_name: 'Roboto-Bold'
+            font_size: sp(30)
         Label:
             text: "Crypto Name"
-            font_size: 35
             text_size: self.size
             halign: 'left'
         TextInput:
@@ -445,11 +430,9 @@
             size_hint_y: None
             hint_text: "(e.g. 'bitcoin')"
             multiline: False
-            height: 50
-            font_size: 30
+            height: sp(50)
         Label:
             text: "Crypto Symbol"
-            font_size: 35
             text_size: self.size
             halign: 'left'
         TextInput:
@@ -457,59 +440,51 @@
             size_hint_y: None
             hint_text: "(e.g. 'btc')"
             multiline: False
-            height: 50
-            font_size: 30
+            height: sp(50)
         Label:
             text: "Crypto Price"
-            font_size: 35
             text_size: self.size
             halign: 'left'
         TextInput:
             id: new_crypto_price_input
             size_hint_y: None
-            height: 50
+            height: sp(50)
             multiline: False
             hint_text: "(e.g. 51863.04)"
             input_filter: 'float'
-            font_size: 30
         Label:
             text: "Percent Change last 24H"
-            font_size: 35
             text_size: self.size
             halign: 'left'
         TextInput:
             id: new_crypto_percent_change_24h_input
             size_hint_y: None
-            height: 50
+            height: sp(50)
             multiline: False
             hint_text: "(e.g. 0.04)"
             input_filter: 'float'
-            font_size: 30
         Label:
             id: new_crypto_message
             markup: True
             text: ""
             color: ((50/256), (222/256), (153/256), 1.0)
-            font_size: 28
         GridLayout:
             cols: 2
             rows: 1
-            spacing: 10
+            spacing: sp(10)
             size_hint_y: None
-            height: 140
+            height: sp(140)
             Button:
                 text: "HOME"
                 size_hint_x: None
-                width: 140
-                font_size: 40
-                font_name: 'Roboto-Bold'
+                width: sp(140)
+
                 on_press:
                     root.manager.transition.direction = 'right'
                     root.manager.current = 'MainScreen'
             Button:
                 text: "SUBMIT"
-                font_size: 80
-                font_name: 'Roboto-Bold'
+
                 on_press:
                     root.submit_new_crypto()
 <NewPortfolioScreen>:
@@ -517,125 +492,101 @@
     GridLayout:
         cols: 1
         rows: 9
-        padding: 20
-        spacing: 10
+        padding: sp(20)
+        spacing: sp(10)
         Label:
             text: 'New Portfolio Entry'
-            font_size: 50
-            font_name: 'Roboto-Bold'
-#        Label:
-#            text: "Crypto Name"
-#            font_size: 35
-#            text_size: self.size
-#            halign: 'left'
+
         Spinner:
             id: new_portfolio_crypto
             text: 'Crypto Name'
             values: []
             size_hint_y: None
-            height: 50
-            font_size: 30
+            height: sp(50)
         Label:
             text: "Quantity Purchased"
-            font_size: 35
             text_size: self.size
             halign: 'left'
         TextInput:
             id: new_portfolio_quantity
-#            text: f'{app.input_text}'
             size_hint_y: None
-            height: 50
-            font_size: 30
+            height: sp(50)
         Label:
             text: "Date Purchased"
-            font_size: 35
             text_size: self.size
             halign: 'left'
         TextInput:
             id: new_portfolio_date
             hint_text: 'YYYY-MM-DD'
             size_hint_y: None
-            height: 50
-            font_size: 30
+            height: sp(50)
         Label:
             id: new_portfolio_message
             text: ""
             color: ((50/256), (222/256), (153/256), 1.0)
-            font_size: 50
         GridLayout:
             cols: 2
             rows: 1
-            spacing: 10
+            spacing: sp(10)
             size_hint_y: None
-            height: 140
+            height: sp(140)
             Button:
                 text: "HOME"
                 size_hint_x: None
-                width: 140
-                font_size: 40
-                font_name: 'Roboto-Bold'
+                width: sp(140)
+
                 on_press:
                     root.manager.transition.direction = 'right'
                     root.manager.current = 'MainScreen'
                     app.root.get_screen('NewPortfolioScreen').go_home()
-#                    app.go_to_home(new_portfolio_message)
             Button:
                 text: "SUBMIT"
-                font_size: 80
-                font_name: 'Roboto-Bold'
+
                 on_press: app.root.get_screen('NewPortfolioScreen').create_new_portfolio()
 <CheckPortfolioScreen>:
     name: "CheckPortfolioScreen"
     GridLayout:
         cols: 1
         rows: 15
-        padding: 20
-        spacing: 10
+        padding: sp(20)
+        spacing: sp(10)
         Label:
             text: 'Check Portfolio'
-            font_size: 50
-            font_name: 'Roboto-Bold'
+
         Label:
             text: ""
         Button:
             id: check_total_portfolio
             text: 'View Portfolio Summary'
             size_hint_y: None
-            height: 40
-            font_size: 25
+            height: sp(40)
             on_press: app.root.get_screen('CheckPortfolioScreen').view_portfolio_summary()
         Button:
             id: check_portfolio_pie
             text: 'View Portfolio Pie Chart'
             size_hint_y: None
-            height: 40
-            font_size: 25
+            height: sp(40)
             on_press: app.root.get_screen('CheckPortfolioScreen').create_portfolio_chart()
         Spinner:
             id: check_portfolio_ids
             text: 'Select Specific Entry'
             values: []
             size_hint_y: None
-            height: 40
-            font_size: 25
+            height: sp(40)
             on_text: app.root.get_screen('CheckPortfolioScreen').portfolio_id_spinner_pressed()
         GridLayout:
             cols: 2
             rows: 1
-            spacing: 10
+            spacing: sp(10)
             Button:
                 id: reload_portfolio_button
                 text: "Reload Portfolio"
-                font_size: 20
                 background_color: ((151/256), (199/256), (174/256), 1.0)
                 on_press: app.root.get_screen('CheckPortfolioScreen').reload_portfolio()
             Button:
                 id: update_entry_button
                 text: "Update Entry"
-                font_size: 20
                 background_color: ((151/256), (199/256), (174/256), 1.0)
-#                font_name: 'Roboto-Bold'
-#                on_press: app.root.get_screen('NewPortfolioScreen').create_new_portfolio()
         Image:
             id: portfolio_chart
             source: ''
@@ -643,52 +594,44 @@
             valign: 'middle'
             size_hint_y: None
             size_hint_x: None
-            width: dp(230)
-            height: dp(230)
+            width: sp(230)
+            height: sp(230)
         Label:
             text: "Investment Amount:"
-            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
             id: check_investment_amount
             color: ((50/256), (222/256), (153/256), 1.0)
-            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
             text: "Current Portfolio Value:"
-            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
             id: check_portfolio_value
             color: ((50/256), (222/256), (153/256), 1.0)
-            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
             text: "Portfolio Value Change:"
-            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
             id: check_value_change
             color: ((50/256), (222/256), (153/256), 1.0)
-            font_size: 25
             text_size: self.size
             halign: 'left'
         Label:
             id: check_portfolio_message
             text: ""
             color: ((50/256), (222/256), (153/256), 1.0)
-            font_size: 45
         Button:
             text: "HOME"
             size_hint_y: None
-            height: 50
-            font_size: 30
-            font_name: 'Roboto-Bold'
+            height: sp(50)
+
             on_press:
                 root.manager.transition.direction = 'right'
                 root.manager.current = 'MainScreen'
@@ -698,63 +641,50 @@
     GridLayout:
         cols: 1
         rows: 9
-        padding: 20
-        spacing: 10
+        padding: sp(20)
+        spacing: sp(10)
         Label:
             text: 'Update Portfolio Entry'
-            font_size: 50
-            font_name: 'Roboto-Bold'
-#        Label:
-#            text: "Crypto Name"
-#            font_size: 35
-#            text_size: self.size
-#            halign: 'left'
+
         Spinner:
             id: update_entry_crypto
             text: 'Crypto Name'
             values: []
             size_hint_y: None
-            height: 50
-            font_size: 30
+            height: sp(50)
         Label:
             text: "Quantity Purchased"
-            font_size: 35
             text_size: self.size
             halign: 'left'
         TextInput:
             id: new_portfolio_quantity
 #            text: f'{app.input_text}'
             size_hint_y: None
-            height: 50
-            font_size: 30
+            height: sp(50)
         Label:
             text: "Date Purchased"
-            font_size: 35
             text_size: self.size
             halign: 'left'
         TextInput:
             id: new_portfolio_date
             hint_text: 'YYYY-MM-DD'
             size_hint_y: None
-            height: 50
-            font_size: 30
+            height: sp(50)
         Label:
             id: new_portfolio_message
             text: ""
             color: ((50/256), (222/256), (153/256), 1.0)
-            font_size: 50
         GridLayout:
             cols: 2
             rows: 1
-            spacing: 10
+            spacing: sp(10)
             size_hint_y: None
-            height: 140
+            height: sp(140)
             Button:
                 text: "UPDATE"
                 size_hint_x: None
-                width: 140
-                font_size: 40
-                font_name: 'Roboto-Bold'
+                width: sp(140)
+
                 on_press:
                     root.manager.transition.direction = 'right'
                     root.manager.current = 'MainScreen'
@@ -762,15 +692,13 @@
 #                    app.go_to_home(new_portfolio_message)
             Button:
                 text: "DELETE"
-                font_size: 80
-                font_name: 'Roboto-Bold'
+
                 on_press: app.root.get_screen('NewPortfolioScreen').create_new_portfolio()
         Button:
             text: "HOME"
             size_hint_y: None
-            height: 50
-            font_size: 30
-            font_name: 'Roboto-Bold'
+            height: sp(50)
+
             on_press:
                 root.manager.transition.direction = 'right'
                 root.manager.current = 'MainScreen'
@@ -788,4 +716,18 @@
 <Button>
     background_normal: ''
     background_color: ((13/256), (179/256), (93/256), 1.0)
-    font_size: 30
+    font_size: sp(30)
+    font_name: 'Roboto-Bold'
+
+<Label>:
+    font_size: sp(20)
+    font_name: 'Roboto-Bold'
+
+<TextInput>:
+    font_size: sp(16)
+    font_name: 'Roboto-Bold'
+
+<Spinner>:
+    font_size: sp(14)
+    font_name: 'Roboto-Bold'
+
