@@ -643,7 +643,7 @@
     name: "UpdateEntryScreen"
     GridLayout:
         cols: 1
-        rows: 9
+        rows: 10
         padding: sp(20)
         spacing: sp(10)
         Label:
@@ -683,17 +683,17 @@
             rows: 1
             spacing: sp(10)
             size_hint_y: None
-            height: sp(140)
+            height: sp(60)
             Button:
                 text: "UPDATE"
                 size_hint_x: None
-                width: sp(140)
+                width: sp(240)
                 on_press: app.root.get_screen('UpdateEntryScreen').update_entry()
             Button:
                 text: "DELETE"
                 on_press: app.root.get_screen('UpdateEntryScreen').delete_entry()
         Button:
-            text: "HOME"
+            text: "BACK"
             size_hint_y: None
             height: sp(50)
 
