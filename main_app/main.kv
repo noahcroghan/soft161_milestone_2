@@ -649,7 +649,8 @@
         Label:
             text: 'Update Portfolio Entry'
         Label:
-            text: "Crypto Name:"
+            id: update_entry_portfolio_number
+            text: "Portfolio Entry:"
         Spinner:
             id: update_entry_crypto
             text: ''
@@ -661,8 +662,7 @@
             text_size: self.size
             halign: 'left'
         TextInput:
-            id: new_portfolio_quantity
-#            text: f'{app.input_text}'
+            id: update_entry_quantity
             size_hint_y: None
             height: sp(50)
         Label:
@@ -688,15 +688,10 @@
                 text: "UPDATE"
                 size_hint_x: None
                 width: sp(140)
-
                 on_press:
-                    root.manager.transition.direction = 'right'
-                    root.manager.current = 'MainScreen'
-                    app.root.get_screen('NewPortfolioScreen').go_home()
-#                    app.go_to_home(new_portfolio_message)
+                    app.root.get_screen('UpdateEntryScreen').update_entry()
             Button:
                 text: "DELETE"
-
                 on_press: app.root.get_screen('NewPortfolioScreen').create_new_portfolio()
         Button:
             text: "HOME"

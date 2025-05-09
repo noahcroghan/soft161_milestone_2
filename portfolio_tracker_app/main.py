@@ -471,3 +471,68 @@ class UpdateEntryScreen(Screen):
         self.portfolio_entry = self.manager.get_screen('CheckPortfolioScreen').ids.check_portfolio_ids.text
         self.find_crypto()
         self.ids.update_entry_crypto.text = self.crypto_name
+        self.ids.update_entry_portfolio_number.text = "Portfolio Entry: " + self.portfolio_entry
+
+    def update_entry(self):
+        db_session = CryptoDatabase.get_session()
+        selected_crypto = self.ids.update_entry_crypto.text
+        try:
+            coin_quantity = float(self.ids.update_entry_quantity.text)
+        except ValueError:
+            self.show_error("Quantity field requires a numerical value.", 25)
+            return
+
+        purchase_date = self.ids.new_portfolio_date.text
+        try:
+            purchase_date = datetime.strptime(purchase_date, "%Y-%m-%d").date()
+        except ValueError:
+            self.show_error("Invalid date format. Use YYYY-MM-DD.", 25)
+            return
+
+        if not self.crypto_name or not coin_quantity or not purchase_date:
+            self.show_error("Missing required data", 30)
+            return
+
+        crypto_id = [crypto.crypto_id for crypto in db_session.query(Cryptocurrency).all() if crypto.name == selected_crypto]
+        if len(crypto_id) != 1:
+            self.show_error("Invalid cryptocurrency selected", 30)
+            return
+        else:
+            crypto_id = crypto_id[0]
+
+        coin_gecko_id = [crypto.coingecko_id for crypto in db_session.query(Cryptocurrency).all() if crypto.name == selected_crypto]
+
+        if len(coin_gecko_id) != 1:
+            self.show_error("Invalid coingecko cryptocurrency selected", 25)
+            return
+        else:
+            coin_gecko_id = coin_gecko_id[0]
+
+        try:
+            gecko_purchase_date = datetime.strftime(purchase_date, "%d-%m-%Y")
+        except ValueError:
+            self.show_error("Invalid date format. Use DD-MM-YYYY.", 25)
+            return
+
+        try:
+            price_at_purchase = coin_gecko_api.get_coin_history_by_id(coin_gecko_id, localization='false', vs_currencies="usd",date=gecko_purchase_date)['market_data']['current_price']['usd']
+        except ValueError:
+            self.show_error("Purchase date must be within last 365 days", 25)
+            return
+
+        initial_investment = price_at_purchase * coin_quantity
+
+        selected_entry = [portfolios for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == int(self.portfolio_entry)]
+        if len(selected_entry) != 1:
+            self.show_error("Invalid entry selected", 25)
+            return
+        else:
+            selected_entry = selected_entry[0]
+
+        selected_entry.crypto_id = crypto_id
+        selected_entry.coin_amount = coin_quantity
+        selected_entry.purchase_date = purchase_date
+        selected_entry.initial_investment_amount = initial_investment
+        db_session.commit()
+        print('Successfully updated portfolio entry')
+        self.show_message('Successfully updated portfolio entry', 25)
