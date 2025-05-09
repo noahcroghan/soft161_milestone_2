@@ -688,11 +688,10 @@
                 text: "UPDATE"
                 size_hint_x: None
                 width: sp(140)
-                on_press:
-                    app.root.get_screen('UpdateEntryScreen').update_entry()
+                on_press: app.root.get_screen('UpdateEntryScreen').update_entry()
             Button:
                 text: "DELETE"
-                on_press: app.root.get_screen('NewPortfolioScreen').create_new_portfolio()
+                on_press: app.root.get_screen('UpdateEntryScreen').delete_entry()
         Button:
             text: "HOME"
             size_hint_y: None

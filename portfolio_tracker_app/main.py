@@ -536,3 +536,16 @@ class UpdateEntryScreen(Screen):
         db_session.commit()
         print('Successfully updated portfolio entry')
         self.show_message('Successfully updated portfolio entry', 25)
+
+    def delete_entry(self):
+        db_session = CryptoDatabase.get_session()
+        selected_entry = [portfolios for portfolios in db_session.query(Portfolio).all() if portfolios.portfolio_id == int(self.portfolio_entry)]
+        if len(selected_entry) != 1:
+            self.show_error("Invalid entry selected", 25)
+            return
+        else:
+            selected_entry = selected_entry[0]
+
+        db_session.delete(selected_entry)
+        db_session.commit()
+        print('Successfully deleted portfolio entry')
