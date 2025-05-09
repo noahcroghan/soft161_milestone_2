@@ -186,8 +186,32 @@
                 height: sp(40)
 
             Label:
-                text: "Placeholder" # TODO: Add instructions
                 markup: True
+                text:
+                    "[b]New Cryptocurrency Screen[/b]\n\n" \
+                    "- Enter a coin's name.\n\n" \
+                    "- Enter a coin's symbol.\n\n" \
+                    "- Enter a coin's current price.\n\n" \
+                    "- Enter a coin's percent price change in the last 24 hours.\n\n" \
+                    "- Tap submit to add a new cryptocurrency to the database.\n\n" \
+                    "[b]New Portfolio Entry Screen[/b]\n\n" \
+                    "- Select a coin from the dropdown menu.\n\n" \
+                    "- Enter the number of coins purchased for this portfolio entry.\n\n" \
+                    "- Enter the date that the coins were purchased in a YYYY-MM-DD format.\n\n" \
+                    "- Tap submit to add a new portfolio entry to the database.\n\n" \
+                    "[b]Check Portfolio Value Screen[/b]\n\n" \
+                    '- Tap "View Portfolio Summary" button to see the total initial investment amount, total current value, and percent change between the two of all the portfolio entries of the current user.\n\n' \
+                    '- Tap "View Portfolio Pie Chart" button to see a pie chart showing each entry\'s contribution the the user\'s portfolio\'s value.\n\n' \
+                    '- Select a portfolio entry to see its initial investment amount, current value, and percent change between the two.\n\n' \
+                    '- If the portfolio summary is currently being displayed, tap the "Reload Portfolio" button to display the portfolio summary with a new current value and percent change.\n\n' \
+                    '- If a portfolio entry has been selected, tap the "Update Entry" button to go to the Update Entry Screen for that portfolio entry.\n\n' \
+                    "[b]Update Entry Screen[/b]\n\n" \
+                    "- Select a coin from the dropdown menu (or leave the current coin).\n\n" \
+                    "- Enter the number of coins purchased for this portfolio entry.\n\n" \
+                    "- Enter the date that the coins were purchased in a YYYY-MM-DD format.\n\n" \
+                    '- Tap the "UPDATE" button to change the crypto_id, coin_amount, and purchase_date of the selected portfolio entry in the database to the entered values.\n\n' \
+                    '- Tap the "DELETE" button to delete the selected portfolio entry from the database and go back to the Check Portfolio Screen.\n\n' \
+                    '- Tap the "BACK" button to go back to the Check Portfolio Screen.\n\n'
                 text_size: self.width, None
                 halign: 'left'
                 valign: 'top'
