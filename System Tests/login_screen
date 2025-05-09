@@ -1,0 +1,14 @@
+Test 1 - Login with no username
+    1. Run database_installer
+    2. Run the main app
+    3. Press the login button without entering or selecting a username
+    4. Error raised, "Please select a user before logging in"
+
+Test 2 - Entering a new username
+    1. Run database_installer
+    2. Run the main app
+    3. Enter a new username in the text box (for example, 'tking')
+    4. Message displayed, "User tking created successfully. Click on existing users"
+    5. Press Select Existing User dropdown box
+    6. New username is included in the existing users
+

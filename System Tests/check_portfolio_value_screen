@@ -1,0 +1,64 @@
+Test 1 - Portfolio Summary Without Any Crypto Data
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Go straight to Check Portfolio Value Screen without added any cryptocurrencies
+    6. Click the View Portfolio Summary button
+    7. Error raised, "Initial Investment Amount Not Found"
+
+Test 2 - Portfolio Pie Chart Without Any Crypto Data
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Go straight to Check Portfolio Value Screen without added any cryptocurrencies
+    6. Click the View Portfolio Pie Chart button
+    7. No Image will be displayed on Portfolio Entry Values
+    8. Message displayed, "Portfolio char loaded successfully"
+
+Test 3 - Specific Entry Without Any Crypto Data
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Go straight to Check Portfolio Value Screen without added any cryptocurrencies
+    6. Click the Select Specific Entry button
+    7. Button is disabled, doesn't do anything
+
+Test 4 - View Portfolio Summary with Crypto Data
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Go to the New Portfolio Entry screen and add a crypto to your portfolio (i.e. tether)
+    6. Go to the Check Portfolio Value screen
+    7. Click the View Portfolio Summary button
+    8. Displays: investment amount, current portfolio value, and portfolio value change
+    9. Message displayed, "Portfolio Entry Displayed"
+
+Test 5 - View Portfolio Pie Chart with Crypto Data
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Go to the New Portfolio Entry screen and add a crypto to your portfolio (i.e. tether)
+    6. Go to the Check Portfolio Value screen
+    7. Click the View Portfolio Pie Chart button
+    8. Displays pie chart of your portfolio entry or entries
+    9. Message displayed, "Portfolio chart loaded successfully"
+
+Test 6 - View a Specific Entry with Crypto Data
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Go to the New Portfolio Entry screen and add a crypto to your portfolio (i.e. tether)
+    6. Go to the Check Portfolio Value screen
+    7. Click the Select Specific Entry spinner
+    8. CLick on one of your entries (entries are in numerical order by when you added them to your portfolio)
+    9. Once the input is received, the app will display the investment amount, current portfolio value,
+       and portfolio value change of the selected cryptocurrency
+    10. Message displayed: "Portfolio Entry Displayed"
+
+

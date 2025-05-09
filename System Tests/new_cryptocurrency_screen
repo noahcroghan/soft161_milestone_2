@@ -1,0 +1,79 @@
+Test 1: No crypto name
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Cryptocurrency button
+    6. Skip Crypto Name text box, enter correct data into other three
+    7. Press submit button
+    8. Error raised, "Name field is required and must be less than 50 characters long"
+
+Test 2: Crypto Name too long
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Cryptocurrency button
+    6. Skip Crypto Name text box, enter correct data into other three
+    7. Press submit button
+    8. Error raised, "Name field is required and must be less than 50 characters long"
+
+Test 3: No Crypto Symbol
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Cryptocurrency button
+    6. Skip Crypto Symbol text box, enter correct data into other three
+    7. Press submit button
+    8. Error raised, "Symbol field is required and must be less than 15 characters long"
+
+Test 4: Crypto Symbol too long
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Cryptocurrency button
+    6. Skip Crypto Symbol text box, enter correct data into other three
+    7. Press submit button
+    8. Error raised, "Symbol field is required and must be less than 15 characters long"
+
+Test 5: No Crypto Price
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Cryptocurrency button
+    6. Skip Crypto Price text box, enter correct data into other three
+    7. Press submit button
+    8. Error raised, "Price fields is required"
+
+Test 6: No Percent Change
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Cryptocurrency button
+    6. Skip Percent Change last 24H text box, enter correct data into other three
+    7. Press submit button
+    8. Error raised, "Percent change field is required"
+
+Test 7: Enter already existing crypto
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Cryptocurrency button
+    6. Enter existing data into text boxes (i.e. Bitcoin data)
+    7. Press submit button
+    8. Error raised, "Submitted crypto already exists"
+
+Test 8: Successfully enter a new crypto
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Cryptocurrency button
+    6. Enter non-existing data into text boxes (Example inputs were king, kng, 200, and 1.4)
+    7. Press submit button
+    8. Message displayed, "New crypto 'King' (KNG) added successfully."

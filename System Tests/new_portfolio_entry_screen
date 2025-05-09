@@ -1,0 +1,61 @@
+Test 1 - No Crypto Name Selection
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Portfolio Entry Button
+    6. Skip Crypto Name spinner, enter correct data for other two text boxes
+    7. Press submit button
+    8. Error raised, "Invalid cryptocurrency selected"
+
+Test 2 - No Quantity Purchased
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Portfolio Entry Button
+    6. Skip Quantity Purchased text box, enter correct data for other two inputs
+    7. Press submit button
+    8. Error raised, "Quantity field requires a numerical value"
+
+Test 3 - Non-numerical Value for Quantity Purchased
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Portfolio Entry Button
+    6. Enter correct data into Crypto Name spinner and Date Purchased text box
+    7. Enter string into Quantity Purchased text box
+    8. Press submit button
+    9. Error raised, "Quantity field requires a numerical value"
+
+Test 4 - No Date Purchased
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Portfolio Entry Button
+    6. Skip Date Purchased text box, enter correct data for other two inputs
+    7. Press submit button
+    8. Error raised, "Invalid date format. Use YYYY-MM-DD"
+
+Test 5 - Wrong Date Format
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Portfolio Entry Button
+    6. Enter correct data into Crypto Name spinner and Quantity Purchased text box
+    7. Enter an invalid date format into Date Purchased text box (i.e. 05/07/2025)
+    8. Press submit button
+    9. Error raised, "Invalid date format. Use YYYY-MM-DD"
+
+Test 6 - Successful Portfolio Entry
+    1. Run database_installer
+    2. Run the main app
+    3. Either create new profile or select existing user
+    4. Press login button
+    5. Click on New Portfolio Entry Button
+    6. Enter correct data into Crypto Name spinner, Quantity Purchased text box, and Date Purchased text box
+    7. Press submit button
+    8. Message displayed, "Submitted"
