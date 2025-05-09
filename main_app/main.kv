@@ -670,7 +670,7 @@
             text_size: self.size
             halign: 'left'
         TextInput:
-            id: new_portfolio_date
+            id: update_entry_date
             hint_text: 'YYYY-MM-DD'
             size_hint_y: None
             height: sp(50)
@@ -696,11 +696,10 @@
             text: "BACK"
             size_hint_y: None
             height: sp(50)
-
             on_press:
                 root.manager.transition.direction = 'right'
-                root.manager.current = 'MainScreen'
-                app.root.get_screen('CheckPortfolioScreen').go_home()
+                root.manager.current = 'CheckPortfolioScreen'
+                app.root.get_screen('UpdateEntryScreen').go_back()
 
 
 <Screen>:

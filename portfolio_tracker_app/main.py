@@ -450,7 +450,6 @@ class UpdateEntryScreen(Screen):
         self.ids.update_entry_message.color = ((50/256), (222/256), (153/256), 1.0)
         self.ids.update_entry_message.font_size = font_size
 
-
     def update_spinner_values(self):
         cryptocurrencies = get_all_cryptocurrencies()
         self.ids.update_entry_crypto.values = cryptocurrencies
@@ -473,6 +472,16 @@ class UpdateEntryScreen(Screen):
         self.ids.update_entry_crypto.text = self.crypto_name
         self.ids.update_entry_portfolio_number.text = "Portfolio Entry: " + self.portfolio_entry
 
+    def go_back(self):
+        self.portfolio_entry = ''
+        self.crypto_name = ''
+        self.ids.update_entry_message.text = ""
+        self.ids.update_entry_message.color = ((50 / 256), (222 / 256), (153 / 256), 1.0)
+        self.ids.update_entry_message.font_size = 50
+        self.ids.update_entry_portfolio_number.text = "Portfolio Entry:"
+        self.ids.update_entry_quantity.text = ""
+        self.ids.update_entry_date.text = ""
+
     def update_entry(self):
         db_session = CryptoDatabase.get_session()
         selected_crypto = self.ids.update_entry_crypto.text
@@ -482,7 +491,7 @@ class UpdateEntryScreen(Screen):
             self.show_error("Quantity field requires a numerical value.", 25)
             return
 
-        purchase_date = self.ids.new_portfolio_date.text
+        purchase_date = self.ids.update_entry_date.text
         try:
             purchase_date = datetime.strptime(purchase_date, "%Y-%m-%d").date()
         except ValueError:
@@ -549,3 +558,7 @@ class UpdateEntryScreen(Screen):
         db_session.delete(selected_entry)
         db_session.commit()
         print('Successfully deleted portfolio entry')
+        self.manager.get_screen('CheckPortfolioScreen').ids.check_portfolio_message.text = 'Successfully deleted portfolio entry'
+        self.manager.get_screen('CheckPortfolioScreen').go_home()
+        self.manager.current = 'CheckPortfolioScreen'
+        self.go_back()
