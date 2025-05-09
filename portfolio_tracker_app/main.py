@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from kivy.app import App
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import Screen, ScreenManager
 from sqlalchemy.exc import SQLAlchemyError
 
 from installer.database import CryptoDatabase, User, Cryptocurrency, Portfolio  # Adjust path if needed
@@ -435,14 +435,39 @@ class CheckPortfolioScreen(Screen):
             self.view_portfolio_summary()
             self.show_message("Portfolio Summary Reloaded", 30)
 
+
 class UpdateEntryScreen(Screen):
-    def __init__(self, portfolio_entry):
-        self.portfolio_entry = portfolio_entry
+    portfolio_entry = ''
+    crypto_name = ''
+
+    def show_error(self, message, font_size):
+        self.ids.update_entry_message.text = message
+        self.ids.update_entry_message.color = (1, 0, 0, 1)
+        self.ids.update_entry_message.font_size = font_size
+
+    def show_message(self, message, font_size):
+        self.ids.update_entry_message.text = message
+        self.ids.update_entry_message.color = ((50/256), (222/256), (153/256), 1.0)
+        self.ids.update_entry_message.font_size = font_size
+
 
     def update_spinner_values(self):
         cryptocurrencies = get_all_cryptocurrencies()
         self.ids.update_entry_crypto.values = cryptocurrencies
 
+    def find_crypto(self):
+        db_session = CryptoDatabase.get_session()
+        entry = int(self.portfolio_entry)
+        name_list = [cryptocurrencies.name for cryptocurrencies in db_session.query(Cryptocurrency).all() if cryptocurrencies.crypto_id == entry]
+
+        if len(name_list) != 1:
+            self.show_error("Invalid crypto selected", 25)
+            return
+        else:
+            self.crypto_name = name_list[0]
+
     def on_enter(self):
         self.update_spinner_values()
-        self.ids.update_entry_crypto.text = "Crypto Name" + self.portfolio_entry
+        self.portfolio_entry = self.manager.get_screen('CheckPortfolioScreen').ids.check_portfolio_ids.text
+        self.find_crypto()
+        self.ids.update_entry_crypto.text = self.crypto_name

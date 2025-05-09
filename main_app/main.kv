@@ -587,6 +587,9 @@
                 id: update_entry_button
                 text: "Update Entry"
                 background_color: ((151/256), (199/256), (174/256), 1.0)
+                on_press:
+                    root.manager.transition.direction = 'right'
+                    root.manager.current = 'UpdateEntryScreen'
         Image:
             id: portfolio_chart
             source: ''
@@ -645,10 +648,11 @@
         spacing: sp(10)
         Label:
             text: 'Update Portfolio Entry'
-
+        Label:
+            text: "Crypto Name:"
         Spinner:
             id: update_entry_crypto
-            text: 'Crypto Name'
+            text: ''
             values: []
             size_hint_y: None
             height: sp(50)
@@ -671,7 +675,7 @@
             size_hint_y: None
             height: sp(50)
         Label:
-            id: new_portfolio_message
+            id: update_entry_message
             text: ""
             color: ((50/256), (222/256), (153/256), 1.0)
         GridLayout:
