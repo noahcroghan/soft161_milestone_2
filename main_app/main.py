@@ -9,7 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError, ProgrammingError
 
 from historical_prices_app.main import SelectCoinScreen, ViewHistoryScreen
 from installer.database import CryptoDatabase
-from portfolio_tracker_app.main import NewCryptoScreen, NewPortfolioScreen, CheckPortfolioScreen, UpdateEntryScreen
+from portfolio_tracker_app.main import NewCryptoScreen, UpdateCryptoScreen, NewPortfolioScreen, CheckPortfolioScreen, UpdateEntryScreen
 
 
 class LoginScreen(Screen):
@@ -132,6 +132,7 @@ class MainApp(App):
         screen_manager.add_widget(ViewHistoryScreen())
         screen_manager.add_widget(SwitchUserScreen())
         screen_manager.add_widget(NewCryptoScreen())
+        screen_manager.add_widget(UpdateCryptoScreen())
         screen_manager.add_widget(NewPortfolioScreen())
         screen_manager.add_widget(CheckPortfolioScreen())
         screen_manager.add_widget(UpdateEntryScreen())

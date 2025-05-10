@@ -53,7 +53,7 @@
 
         GridLayout:
             cols: 1
-            rows: 8
+            rows: 9
             padding: sp(20)
             spacing: sp(20)
             Label:
@@ -65,6 +65,11 @@
                 on_press:
                     root.manager.transition.direction = 'left'
                     root.manager.current = 'NewCryptoScreen'
+            Button:
+                text: 'Update Cryptocurrency'
+                on_press:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'UpdateCryptoScreen'
             Button:
                 text: 'New Portfolio Entry'
                 on_press:
@@ -508,9 +513,92 @@
                     root.manager.current = 'MainScreen'
             Button:
                 text: "SUBMIT"
-
-                on_press:
-                    root.submit_new_crypto()
+                on_press: root.submit_new_crypto()
+<UpdateCryptoScreen>:
+    name: "UpdateCryptoScreen"
+    GridLayout:
+        cols: 1
+        rows: 13
+        padding: sp(20)
+        spacing: sp(10)
+        Label:
+            text: 'Update Cryptocurrency'
+            font_size: sp(30)
+        Spinner:
+            id: update_crypto_spinner
+            text: 'Select Crypto'
+            values: []
+            size_hint_y: None
+            height: sp(50)
+        Label:
+            text: "Crypto Name"
+            text_size: self.size
+            halign: 'left'
+        TextInput:
+            id: update_crypto_name_input
+            size_hint_y: None
+            hint_text: "(e.g. 'bitcoin')"
+            multiline: False
+            height: sp(50)
+        Label:
+            text: "Crypto Symbol"
+            text_size: self.size
+            halign: 'left'
+        TextInput:
+            id: update_crypto_symbol_input
+            size_hint_y: None
+            hint_text: "(e.g. 'btc')"
+            multiline: False
+            height: sp(50)
+        Label:
+            text: "Crypto Price"
+            text_size: self.size
+            halign: 'left'
+        TextInput:
+            id: update_crypto_price_input
+            size_hint_y: None
+            height: sp(50)
+            multiline: False
+            hint_text: "(e.g. 51863.04)"
+            input_filter: 'float'
+        Label:
+            text: "Percent Change last 24H"
+            text_size: self.size
+            halign: 'left'
+        TextInput:
+            id: update_crypto_percent_change_24h_input
+            size_hint_y: None
+            height: sp(50)
+            multiline: False
+            hint_text: "(e.g. 0.04)"
+            input_filter: 'float'
+        Label:
+            id: update_crypto_message
+            markup: True
+            text: ""
+            color: ((50/256), (222/256), (153/256), 1.0)
+        GridLayout:
+            cols: 2
+            rows: 1
+            spacing: sp(10)
+            size_hint_y: None
+            height: sp(60)
+            Button:
+                text: "UPDATE"
+                size_hint_x: None
+                width: sp(240)
+                on_press: app.root.get_screen('UpdateCryptoScreen').update_crypto()
+            Button:
+                text: "DELETE"
+                on_press: app.root.get_screen('UpdateCryptoScreen').delete_crypto()
+        Button:
+            text: "HOME"
+            size_hint_y: None
+            height: sp(50)
+            on_press:
+                root.manager.transition.direction = 'right'
+                root.manager.current = 'MainScreen'
+                app.root.get_screen('UpdateCryptoScreen').go_home()
 <NewPortfolioScreen>:
     name: "NewPortfolioScreen"
     GridLayout:
@@ -520,7 +608,6 @@
         spacing: sp(10)
         Label:
             text: 'New Portfolio Entry'
-
         Spinner:
             id: new_portfolio_crypto
             text: 'Crypto Name'

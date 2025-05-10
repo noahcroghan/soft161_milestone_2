@@ -46,8 +46,6 @@ def get_all_portfolios():
         str_list.append(str(portfolio_id))
     return str_list
 
-
-
 class NewCryptoScreen(Screen):
     def submit_new_crypto(self):
         name = self.ids.new_crypto_name_input.text.strip().capitalize()
@@ -109,7 +107,103 @@ class NewCryptoScreen(Screen):
         self.ids.new_crypto_price_input.text = ""
         self.ids.new_crypto_percent_change_24h_input.text = ""
 
+class UpdateCryptoScreen(Screen):
+    def update_spinner_values(self):
+        cryptocurrencies = get_all_cryptocurrencies()
+        self.ids.update_crypto_spinner.values = cryptocurrencies
 
+    def show_error(self, message, font_size):
+        self.ids.update_crypto_message.text = message
+        self.ids.update_crypto_message.color = (1, 0, 0, 1)
+        self.ids.update_crypto_message.font_size = font_size
+
+    def show_message(self, message, font_size):
+        self.ids.update_crypto_message.text = message
+        self.ids.update_crypto_message.color = ((50/256), (222/256), (153/256), 1.0)
+        self.ids.update_crypto_message.font_size = font_size
+
+    def go_home(self):
+        self.ids.update_crypto_message.text = ""
+        self.ids.update_crypto_message.color = ((50/256), (222/256), (153/256), 1.0)
+        self.ids.update_crypto_message.font_size = 50
+        self.ids.update_crypto_spinner.text = "Select Crypto"
+        self.ids.update_crypto_name_input.text = ""
+        self.ids.update_crypto_symbol_input.text = ""
+        self.ids.update_crypto_price_input.text = ""
+        self.ids.update_crypto_percent_change_24h_input.text = ""
+
+    def on_enter(self):
+        self.update_spinner_values()
+
+    def update_crypto(self):
+        db_session = CryptoDatabase.get_session()
+        selected_crypto = self.ids.update_crypto_spinner.text
+        selected_crypto = [cryptocurrencies for cryptocurrencies in db_session.query(Cryptocurrency).all() if cryptocurrencies.name == selected_crypto]
+        if len(selected_crypto) != 1:
+            self.show_error("Invalid crypto selected", 25)
+            return
+        else:
+            selected_crypto = selected_crypto[0]
+
+        name = self.ids.update_crypto_name_input.text
+        symbol = self.ids.update_crypto_symbol_input.text
+        price = self.ids.update_crypto_price_input.text
+        percent_change_24h = self.ids.update_crypto_percent_change_24h_input.text
+        if not name or len(name) > 50:
+            self.show_error("Name field is required and must be less than 50 characters long.")
+            return
+        if not symbol or len(symbol) > 15:
+            self.show_error("Symbol field is required and must be less than 15 characters long.")
+            return
+        if " " in symbol:
+            self.show_error("Symbol field cannot contain spaces.")
+            return
+        try:
+            price = float(price)
+            if price < 0:
+                self.show_error("Price cannot be negative.")
+                return
+            elif price > 1000000000000:
+                self.show_error("Price cannot be greater than $10,000,000,000.")
+                return
+        except ValueError:
+            self.show_error("Price field is required.")
+            return
+        try:
+            percent_change_24h = float(percent_change_24h)
+            if percent_change_24h < -100 or percent_change_24h > 1000:
+                self.show_error("Percent change must be between -100% and 1000%.")
+                return
+        except ValueError:
+            self.show_error("Percent change field is required.")
+            return
+
+        selected_crypto.name = name
+        selected_crypto.symbol = symbol
+        selected_crypto.current_price = price
+        selected_crypto.percent_change_24h = percent_change_24h
+        db_session.commit()
+        print('Successfully updated crypto')
+        self.go_home()
+        self.update_spinner_values()
+        self.show_message('Successfully updated crypto', 25)
+
+    def delete_crypto(self):
+        db_session = CryptoDatabase.get_session()
+        selected_crypto = self.ids.update_crypto_spinner.text
+        selected_crypto = [cryptocurrencies for cryptocurrencies in db_session.query(Cryptocurrency).all() if cryptocurrencies.name == selected_crypto]
+        if len(selected_crypto) != 1:
+            self.show_error("Invalid crypto selected", 25)
+            return
+        else:
+            selected_crypto = selected_crypto[0]
+
+        db_session.delete(selected_crypto)
+        db_session.commit()
+        print('Successfully deleted crypto')
+        self.go_home()
+        self.update_spinner_values()
+        self.show_message('Successfully deleted crypto', 25)
 
 class NewPortfolioScreen(Screen):
     def update_spinner_values(self):
