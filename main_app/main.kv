@@ -571,37 +571,35 @@
     name: "CheckPortfolioScreen"
     GridLayout:
         cols: 1
-        rows: 15
+        rows: 14
         padding: sp(20)
         spacing: sp(10)
         Label:
             text: 'Check Portfolio'
-
-        Label:
-            text: ""
         Button:
             id: check_total_portfolio
             text: 'View Portfolio Summary'
             size_hint_y: None
-            height: sp(40)
+            height: sp(35)
             on_press: app.root.get_screen('CheckPortfolioScreen').view_portfolio_summary()
         Button:
             id: check_portfolio_pie
             text: 'View Portfolio Pie Chart'
             size_hint_y: None
-            height: sp(40)
+            height: sp(35)
             on_press: app.root.get_screen('CheckPortfolioScreen').create_portfolio_chart()
         Spinner:
             id: check_portfolio_ids
             text: 'Select Specific Entry'
             values: []
             size_hint_y: None
-            height: sp(40)
+            height: sp(35)
             on_text: app.root.get_screen('CheckPortfolioScreen').portfolio_id_spinner_pressed()
         GridLayout:
             cols: 2
             rows: 1
             spacing: sp(10)
+            height: sp(40)
             Button:
                 id: reload_portfolio_button
                 text: "Reload Portfolio"
@@ -617,12 +615,10 @@
         Image:
             id: portfolio_chart
             source: ''
-            halign: 'center'
-            valign: 'middle'
             size_hint_y: None
             size_hint_x: None
-            width: sp(230)
-            height: sp(230)
+            width: sp(200)
+            height: sp(200)
         Label:
             text: "Investment Amount:"
             text_size: self.size
@@ -657,8 +653,7 @@
         Button:
             text: "HOME"
             size_hint_y: None
-            height: sp(50)
-
+            height: sp(40)
             on_press:
                 root.manager.transition.direction = 'right'
                 root.manager.current = 'MainScreen'
