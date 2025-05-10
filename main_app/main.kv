@@ -42,64 +42,61 @@
 
 <MainScreen>:
     name: 'MainScreen'
-    BoxLayout:
-        orientation: 'vertical'
-        BoxLayout:
-            orientation: 'horizontal'
-            Label:
-                text: 'Cryptocurrency App'
+    GridLayout:
+        cols: 1
+        rows: 11
+        padding: sp(20)
+        spacing: sp(20)
+        Label:
+            text: 'Cryptocurrency App'
+            font_size: sp(40)
+        Label:
+            text: ''
 
-                font_size: sp(30)
+        Label:
+            id: welcome_label
+            text: "Welcome: " + app.current_user
 
-        GridLayout:
-            cols: 1
-            rows: 9
-            padding: sp(20)
-            spacing: sp(20)
-            Label:
-                id: welcome_label
-                text: "Welcome: " + app.current_user
-
-            Button:
-                text: 'New Cryptocurrency'
-                on_press:
-                    root.manager.transition.direction = 'left'
-                    root.manager.current = 'NewCryptoScreen'
-            Button:
-                text: 'Update Cryptocurrency'
-                on_press:
-                    root.manager.transition.direction = 'left'
-                    root.manager.current = 'UpdateCryptoScreen'
-            Button:
-                text: 'New Portfolio Entry'
-                on_press:
-                    root.manager.transition.direction = 'left'
-                    root.manager.current = 'NewPortfolioScreen'
-            Button:
-                text: 'Check Portfolio Value'
-                on_press:
-                    root.manager.transition.direction = 'left'
-                    root.manager.current = 'CheckPortfolioScreen'
-            Button:
-                text: 'Select Coin'
-                on_press:
-                    root.manager.current = 'SelectCoinScreen'
-                    root.manager.transition.direction = 'left'
-            Button:
-                text: 'View History'
-                on_press:
-                    root.manager.current = 'ViewHistoryScreen'
-                    root.manager.transition.direction = 'left'
-            Button:
-                text: 'About/Help'
-                on_press:
-                    root.manager.transition.direction = 'left'
-                    root.manager.current = 'HelpScreen'
-            Button:
-                text: 'Switch User'
-                on_press:
-                    root.manager.transition.direction = 'left'
-                    root.manager.current = 'SwitchUserScreen'
+        Button:
+            text: 'New Cryptocurrency'
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'NewCryptoScreen'
+        Button:
+            text: 'Update Cryptocurrency'
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'UpdateCryptoScreen'
+        Button:
+            text: 'New Portfolio Entry'
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'NewPortfolioScreen'
+        Button:
+            text: 'Check Portfolio Value'
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'CheckPortfolioScreen'
+        Button:
+            text: 'Select Coin'
+            on_press:
+                root.manager.current = 'SelectCoinScreen'
+                root.manager.transition.direction = 'left'
+        Button:
+            text: 'View History'
+            on_press:
+                root.manager.current = 'ViewHistoryScreen'
+                root.manager.transition.direction = 'left'
+        Button:
+            text: 'About/Help'
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'HelpScreen'
+        Button:
+            text: 'Switch User'
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'SwitchUserScreen'
 
 <SwitchUserScreen>
     name: 'SwitchUserScreen'
