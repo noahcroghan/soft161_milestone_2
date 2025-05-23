@@ -1,3 +1,14 @@
+# Notice
+
+This was the final 4 person group project for SOFT-161 (Software Engineering) during Spring 2025. The goal was to make a crypto tracker app using Python, Kivy, MySQL for backend and CoinGecko API for fetching data, as well as meeting a number of requirements.
+
+Group members are as follows:
+
+- `bchebefuh2`: Bradley Chebefuh
+- `aalfieri4`: Alijah Alfieri
+- `tkingery2`: Tristan Kingery
+- `Noah Croghan`: Noah Croghan (me)
+
 # Cryptocurrency App
 
 File Structure
@@ -27,8 +38,8 @@ File Structure
     - Set up your [personal access token](https://docs.gitlab.com/user/profile/personal_access_tokens/) if you haven't
       already.
 2. Clone the repository with:
-    - `git clone git@git.unl.edu:bchebefuh2/soft161_milestone_2.git` or
-    - `git clone https://git.unl.edu/bchebefuh2/soft161_milestone_2.git`
+    - `git clone git@github.com:noahcroghan/soft161_milestone_2.git` or
+    - `git clone https://github.com/noahcroghan/soft161_milestone_2.git`
     - Provide the personal access token when asked for a username/password
 
 3. Change into the cloned directory with `cd soft161_milestone_2` or import the directory into your IDE
